@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+  <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">  
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+<!--CSS-FILES-->
+</head>
+<body>
+
+<div id="main_app" as="c3d/MainApp" hidden></div>
+
+
+
+<!--SCRIPT-LAST_MOD-->
+<!--SCRIPT-FILES-->
+<script type="text/javascript">
+function addScript(source, callback, errback) {
+    var tag = document.createElement("script");
+    tag.type = "text/javascript";
+    tag.src = source;
+    tag.onload = callback || function(){console.log('laoded ',source );};
+    tag.onerror = errback;
+    document.head.append(tag);
+}
+window.LANG = localStorage.getItem('app-lang');
+if(!LANG) LANG = 'en';
+addScript('js/'+LANG+'.js?__MT__='+APP_LAST_MODIFIED, nextScript, function(){
+    console.error("Language not found "+LANG);
+    setTimeout(function(){
+      localStorage.setItem('app-lang','en');
+      document.location.reload();
+    },2000);  
+});
+var SCRIPTS_i = 0;
+function nextScript(){
+  if(SCRIPTS_i >= SCRIPTS.length){
+    init();
+  }else{  
+    var arr = SCRIPTS[SCRIPTS_i];
+    addScript(arr[0]+'?__mt__='+arr[1], nextScript);
+    SCRIPTS_i++;
+  }
+}	
+</script>
+
+</body>
+</html>

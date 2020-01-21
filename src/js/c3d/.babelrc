@@ -1,0 +1,10 @@
+{
+  "retainLines": true,
+  "plugins": [
+	"syntax-jsx",
+  	"jsx-inject-mi2",
+  	"jsx-translate",
+  	["jsx-mi2", {staticTranslation:true}],
+  ],
+  "ignore": ["node_modules"]
+}

@@ -1,0 +1,36 @@
+<div class="">
+	<select p="year" as="base/Input"></select>
+	<select p="month" as="base/Input">
+		<option value="0">[[month1]]</option>
+		<option value="1">[[month2]]</option>
+		<option value="2">[[month3]]</option>
+		<option value="3">[[month4]]</option>
+		<option value="4">[[month5]]</option>
+		<option value="5">[[month6]]</option>
+		<option value="6">[[month7]]</option>
+		<option value="7">[[month8]]</option>
+		<option value="8">[[month9]]</option>
+		<option value="9">[[month10]]</option>
+		<option value="10">[[month11]]</option>
+		<option value="11">[[month12]]</option>
+	</select>
+</div>
+<div class="calendar-mid">
+	<table>
+		<thead p="dayNames" names="[[sday0]],[[sday1]],[[sday2]],[[sday3]],[[sday4]],[[sday5]],[[sday6]]"></thead>
+		<tbody p="dayGrid" class="CalendarDays"></tbody>
+	</table>
+	<div hidden p="timeArea">
+		<div><input p="times."/></div>
+		<input p="times."/>
+		<span>:</span>
+		<input p="times."/>
+		<input p="times."/>
+	</div>
+</div>
+<div class="buttons">
+	<a p="today" class="bt" as="base/Button" event="today">[[today]]</a>
+	<a p="done" class="bt" as="base/Button" event="done">[[done]]</a>
+	<a p="clear" class="bt" as="base/Button" event="done" action="clear">[[clear]]</a>
+	<input p="timeInput" size="5" as="base/Input"/>
+</div>

@@ -1,0 +1,100 @@
+.form{
+	width: 350px;
+}
+
+section {
+	&:not(:first-child){
+		margin-top: 10px;	
+	}
+	> label{
+		display: block;
+		font-weight: bold;
+		color: black;
+		margin-bottom: 4px;
+	}
+}
+
+.form-line, .form-group, .form-line-vert{
+	label{
+		padding-left: 2px;
+		display: block;
+		color: $main-link-color;
+		// color: $app-design-main-color;
+		// font-weight: 600;
+		margin-bottom: 2px;
+	}
+}
+.form-inline{
+	@include flexbox();
+	vertical-align: middle;
+	align-items: baseline;
+	& > *:not(:first-child){
+		margin-left: 6px;
+	}
+}
+.form-line, .form-group{
+	position: relative;
+	margin-bottom: 8px;
+	.form-control{
+		width: 100%;
+	}
+}
+.form-line-vert{
+	@include flexbox();
+	@include flex-flow(column nowrap);
+}
+.form-line-columns{
+	@include flexbox();
+	@include flex-flow(row nowrap);
+	& > *{
+		@include flex(1);
+		&:not(:first-child){
+			margin-left: 6px;
+		}
+	}
+    align-items: flex-end;
+}
+
+.form-input{
+	display: block;
+	width: 100%;
+}
+.form-input-element, .form-control, INPUT.form-input, TEXTAREA.form-input{
+	padding: 5px 10px;
+	color: $main-fg;
+	border: solid 1px $main-border-color;
+	border-radius: 3px;
+	height: 40px;
+	&:hover:not([readonly]) {border:solid 1px #bbb;} 
+	&:focus:not([readonly]) {border:solid 1px #42aee9;}
+	&.validation-error{
+		border: solid 1px red;
+	} 
+}
+.form-control-small{
+	padding: 2px 6px;
+	height: 24px;
+}
+
+.from-buttons{
+	.bt, .bt1, .bt2{
+		margin-right: 8px;
+	}
+}
+.validation-error{
+	border-bottom-color: red;
+}
+
+[validation-error-message]{
+
+	&:before{
+		display: block;
+		content: attr(validation-error-message);
+		font-size: 0.8em;
+		color: red;
+	}
+	&[validation-error-type="required"]:before{
+		position: absolute;
+		right: 0; top: 0;
+	}
+}

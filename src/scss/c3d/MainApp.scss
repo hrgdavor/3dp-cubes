@@ -1,0 +1,11 @@
+[as="c3d/MainApp"]{
+	> canvas{
+		outline: solid 1px red;
+		margin: 5px;
+	}
+	[as="c3d/PieceCanvas"]{
+		display: inline-block;
+		padding: 5px;
+		margin: 5px;
+	}
+}

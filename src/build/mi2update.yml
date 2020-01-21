@@ -1,0 +1,10 @@
+
+@ defVar
+  mi2from: ../../mi2
+
+@ Copy
+- input:  "${mi2from}/src"
+  output:    "src/js/mi2"
+  include: ["**.js","**.html","**.css"]
+  exclude: ["**.md"]
+

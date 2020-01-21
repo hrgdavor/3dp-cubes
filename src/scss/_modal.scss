@@ -1,0 +1,35 @@
+.modal-dialog{
+	margin:0;
+	position: fixed;
+	top:0px; left: 0px;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 20px;
+	@include flexbox();
+	justify-content: center; /* horizontal for default flow*/
+	align-items: center; /* vertical for default flow */
+	background: rgba(0,0,0,0.7);
+	z-index: 100;
+}
+.modal-content{
+	position: relative;
+	max-height: 100%;
+	background: white;
+	overflow: auto;
+	justify-content: center; /* horizontal for default flow*/
+	align-items: center; /* vertical for default flow */	
+	.close-button{
+		&:before{
+			display: block;
+			transform: rotate(45deg);
+			font-size: 18px;
+			content: '+';
+			font-weight: bold;
+		}
+		position: absolute;
+		padding: 4px 8px;
+		top: 0;
+		right: 0;
+	}
+}

@@ -1,0 +1,89 @@
+*{
+  box-sizing: border-box;
+}
+body,html{
+  width: 100%;
+  height: 100%;
+  margin:0;
+  padding:0;
+}
+
+body{
+  white-space: nowrap;
+  color: #aaa;
+  padding: 4px;
+  background-color: white;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+tag-name{
+  color: #55a;
+  text-transform: lowercase;
+}
+
+tag, open-tag, close-tag, content{
+  display: block;
+}
+open-tag:before{
+  content: '\003c';
+}
+open-tag:after, close-tag:after{
+  content: '\003e';
+}
+content{
+  padding-left: 13px;
+  border-left: solid 1px transparent;
+}
+close-tag:before{
+  content: '\003c/';
+}
+
+attr name:after{
+  content: '=';
+}
+attr name:before{
+  content: ' ';
+}
+
+attr value:before, attr value:after{
+  content: '"';
+}
+
+tag[name="BUTTON"] > open-tag > tag-name{
+  color: red;
+}
+
+/* custom color LABEL */
+tag[name="LABEL"] > content > text-node{
+  color: black;
+}
+
+
+/* custom :hover line aside all child nodes */
+open-tag:hover + content{
+  border-left-color: #aaa;
+}
+
+/*  custom inline element with text only inside (and emtpy) */
+tag[text-only] open-tag,
+tag[text-only] content,
+tag[text-only] close-tag {
+  display: inline-block;
+  padding-left: 0;
+}
+
+/* custom colors mi2js */
+attr[name="as"] > value{
+  color: green;
+}
+
+attr[name="p"] > value{
+  color: orange;
+}
+
+
+/*  custom show/hide close tag */
+close-tag{
+  display: none !important;
+}

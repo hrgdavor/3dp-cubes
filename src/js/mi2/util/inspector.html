@@ -1,0 +1,20 @@
+<html>
+<head>
+  <script>
+  document.write('<'+'link rel="stylesheet" type="text/css" href="src/util/inspector.css?__mt__='+Math.random()+'">');
+  </script>
+</head>
+<body>
+</body>
+</html>
+<script>
+  document.write('<'+'script src="../../src/mi2.js?__mt__='+Math.random()+'"><'+'/script>');
+  document.write('<'+'script src="../../src/html.js?__mt__='+Math.random()+'"><'+'/script>');
+  document.write('<'+'script src="inspector.js?__mt__='+Math.random()+'"><'+'/script>');
+
+
+  function init(win, element){
+    mi2JS_genCode(element, document.body);
+  }
+
+</script>

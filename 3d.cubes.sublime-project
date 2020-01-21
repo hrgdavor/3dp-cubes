@@ -1,0 +1,46 @@
+{
+	"folders":
+	[
+		{
+			"path": "src/js"
+		},
+		{
+			"path": "src/scss"
+		},
+		{
+			"path": "src/html"
+		},
+		{
+			"path": "src/build"
+		},
+		{
+			"path": "src/lang"
+		},
+		{
+			"path": "doc"
+		},
+		{
+			"path": "./node_modules/bourbon/core/bourbon"
+		},
+		{
+			"path": "ext"
+		},
+		{
+			"folder_exclude_patterns": ["node_modules", ".svn", ".git", ".hg", ".settings", "deploy","src", "doc"],
+			"path": "."
+		},
+	],
+	"settings":
+	{
+		"open_related_patterns":
+		[
+			[
+				"*\\js\\*.js",
+				"*\\js\\*.html",
+				"*\\js\\*.tpl",
+				"*\\scss\\*.scss"
+			]
+		]
+	}
+
+}
