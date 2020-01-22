@@ -90,6 +90,26 @@
 		return ret;
 	};
 
+	proto.drawGridX = function(){
+		var ctx = this.ctx;
+		var canvas = this.canvas;
+		for(var x=1; x<this.gw; x++){
+			ctx.beginPath();
+	  		ctx.strokeStyle = x % 4 == 0 ? 'red':'gray';
+			ctx.moveTo(x*this.gridW,0);
+			ctx.lineTo(x*this.gridW, canvas.height);
+			ctx.stroke();
+		}
+		for(var y=1; y<this.gh; y++){
+			ctx.beginPath();
+	  		ctx.strokeStyle = y % 4 == 2 ? 'red':'gray';
+
+			ctx.moveTo(0, y*this.gridW,0, 0);
+			ctx.lineTo(canvas.height, y*this.gridW);
+			ctx.stroke();
+		}
+	}
+
 	proto.drawPiece = function(piece){
 		if(this.cfg.resizeGrid){
 			this.setSize(this.pieceToSize(piece, {}, true));

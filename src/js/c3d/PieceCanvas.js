@@ -6,8 +6,14 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
-		this.listen(this.canvas.el, 'mousedown', function(){
-			this.setValue(this.cubeView.rotatePiece(this.piece));
+		this.listen(this.canvas.el, 'pointerdown', function(evt){
+			// this.setValue(this.cubeView.rotatePiece(this.piece));
+			var x = evt.offsetX;
+			var y = evt.offsetY;
+			console.log('evt',x,y,evt);
+		});
+		this.listen(this.canvas.el, 'mousemove', function(evt){
+			
 		});
 	};
 

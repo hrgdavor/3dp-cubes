@@ -20,7 +20,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	var cubismerhan = {
-		pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
+		// pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
+		pieces: '011--010.020--010.000.300',
 		piecesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 },
 		puzzles: [
 			'4444.4444.4444.4444',
@@ -40,13 +41,14 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var puzzleDef  = cubismerhan;
 		
 		this.piecesCfg = mi2.copy(puzzleDef.piecesCfg);
-		this.piecesCfg.gridW = 10;
+		this.piecesCfg.gridW = 30;
 		
 		this.puzzlesCfg = mi2.copy(puzzleDef.puzzlesCfg);
-		this.puzzlesCfg.gridW = 10;
+		this.puzzlesCfg.gridW = 30;
 		
 		var pieces = splitPieces(puzzleDef.pieces);
 		this.loop.setValue(pieces);
+		this.loop.getItem(0).cubeView.drawGridX();
 
 		var puzzles = splitPieces(puzzleDef.puzzles);
 		this.loop2.setValue(puzzles);
