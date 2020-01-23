@@ -7,6 +7,7 @@
 </div>
 
 <h1>{'pieces'}({state.puzzleName})</h1>
+(dblclick: animate angle, CTRL+click: rotate)
 <div p="loop" as="base/Loop" item="c3d/PieceCanvas"/>
 <h1>{'puzzles'}</h1>
 <div p="loop2" as="base/Loop" item="c3d/PieceCanvas"/>

@@ -10,13 +10,29 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	
 	var defs = {};
 	defs.cube1 = {
+		name:'cube 1',
 		pieces: '21.01--111.100--011.110--12.10--12.01--111.010--11.01',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
 	};
 
+	defs.coffinsq = {
+		name: 'Coffin\'s Quintet',
+		link: 'http://puzzlewillbeplayed.com/333/CoffinsQuintet/',
+		designer: 'Stewart T. Coffin.',
+		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Coffin.xml',
+		pieces: '12.10.11--12.10.20--11.02.01--02.11.01',
+		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
+		puzzles: '333.333.333',
+		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
+	};
+
 	defs.knossos = {
+		name: 'knossos',
+		link: 'http://puzzlewillbeplayed.com/333/Knossos/',
+		designer: 'Bernhard Schweitzer',
+		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Schweitzer.xml',
 		pieces: '211.010--210.011--021.110--12.10--21.10--111.010',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
@@ -42,7 +58,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.init = function(){
-		this.showPuzzle('cube1');
+		this.showPuzzle('coffinsq');
 	}
 
 	proto.showPuzzle = function(code){
