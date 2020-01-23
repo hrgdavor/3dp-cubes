@@ -10,7 +10,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.listen(this.canvas.el, 'pointerdown', function(evt){
 			var now = Date.now();
 
-			if(now - this.__lastDown < 500){			
+			if(!evt.ctrlKey && now - this.__lastDown < 500){
 				this.animDirection *= -1;
 				this.startAnim();
 			}

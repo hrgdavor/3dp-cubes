@@ -22,7 +22,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link: 'http://puzzlewillbeplayed.com/333/CoffinsQuintet/',
 		designer: 'Stewart T. Coffin.',
 		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Coffin.xml',
-		pieces: '12.10.11--12.10.20--11.02.01--02.11.01',
+		pieces: '12.10.11--12.10.20--11.02.01--02.11.01--10.12.01',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -63,10 +63,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.showPuzzle = function(code){
 		
-		this.expandVars({puzzleName:code});
 
 		var puzzleDef  = defs[code];
 		var size = 8;
+
+		this.expandVars({puzzleName: puzzleDef.name || code});
 
 		this.piecesCfg = mi2.copy(puzzleDef.piecesCfg);
 		this.piecesCfg.gridW = size;

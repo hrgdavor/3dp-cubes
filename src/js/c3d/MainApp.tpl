@@ -4,6 +4,7 @@
 	<button class="bt1" x-click={this.showPuzzle('cube1')}>cube1</button>
 	<button class="bt1" x-click={this.showPuzzle('knossos')}>knossos</button>
 	<button class="bt1" x-click={this.showPuzzle('cubismerhan')}>cubismerhan</button>
+	<button class="bt1" x-click={this.showPuzzle('coffinsq')}>Coffin's Quintet</button>
 </div>
 
 <h1>{'pieces'}({state.puzzleName})</h1>
