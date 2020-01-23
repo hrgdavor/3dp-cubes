@@ -6,15 +6,53 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
+		
 		this.listen(this.canvas.el, 'pointerdown', function(evt){
-			// this.setValue(this.cubeView.rotatePiece(this.piece));
+			var now = Date.now();
+
+			if(now - this.__lastDown < 500){			
+				this.animDirection *= -1;
+				this.startAnim();
+			}
+
+			this.__lastDown = now;
+
+			if(evt.ctrlKey) this.setValue(this.cubeView.rotatePiece(this.piece));
+			
 			var x = evt.offsetX;
 			var y = evt.offsetY;
 			console.log('evt',x,y,evt);
 		});
+
 		this.listen(this.canvas.el, 'mousemove', function(evt){
 			
 		});
+
+		this.animDirection = 1;
+	};
+
+	proto.startAnim = function(){
+		this.__animStart = Date.now();
+		this.__animStartOffset = this.cubeView.cubeDraw.offset;
+		cancelAnimationFrame(this.__anim);
+		this.__anim = this.requestAnimationFrame(this.animateOffset);
+	};
+
+	proto.animateOffset = function(){
+		var delta = Date.now() - this.__animStart;
+		
+		var oldOffset = this.cubeView.cubeDraw.offset;
+		var newOffset = this.__animStartOffset + Math.round(this.animDirection * delta/50);
+		if(Math.abs(newOffset) > this.maxOffset){
+			cancelAnimationFrame(this.__anim);
+			return;
+		}
+
+		if(oldOffset != newOffset){
+			this.cubeView.cubeDraw.offset = newOffset;
+			this.setValue(this.piece);
+		}
+		this.__anim = this.requestAnimationFrame(this.animateOffset);
 	};
 
 	proto.setConfig = function(cfg){
@@ -27,6 +65,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			cfg.gridW *= this.fixAA;
 		}
 		var cubeView = this.cubeView = new CubeView3D(c, cfg);
+		this.maxOffset = this.cubeView.cubeDraw.offset;
+		//this.cubeView.cubeDraw.offset = cfg.gridW;
 		if(this.fixAA){
 			cubeView.cubeDraw.lineWidth = this.fixAA;
 		}
@@ -39,7 +79,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		// piece = cubeView.rotatePiece(piece);
 		// piece = cubeView.rotatePiece(piece);
 		// piece = cubeView.rotatePiece(piece);
-		cubeView.drawPiece(piece);		
+		cubeView.drawPiece(piece, 1, 1);	
 	};
 
 	proto.initTemplate = function(h,t,state, self){

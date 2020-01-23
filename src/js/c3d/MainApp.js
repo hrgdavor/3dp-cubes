@@ -7,21 +7,25 @@ function(proto, superProto, comp, mi2, h, t, filters){
 //	proto.initChildren = function(){
 //		superProto.initChildren.call(this);
 //	};
+	
+	var defs = {};
+	defs.cube1 = {
+		pieces: '21.01--111.100--011.110--12.10--12.01--111.010--11.01',
+		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
+		puzzles: '333.333.333',
+		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
+	};
 
-	var piecesKnossos = '211.010--210.011--021.110--12.10--21.10--111.010';
-	var piecesCubismerhan = '211.211--121.121--221.111--122.111';
-	var piecesCube1 = '21.01--111.100--011.110--12.10--12.01--111.010--11.01';
-
-	var knossos = {
+	defs.knossos = {
 		pieces: '211.010--210.011--021.110--12.10--21.10--111.010',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
 	};
 
-	var cubismerhan = {
-		// pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
-		pieces: '011--010.020--010.000.300',
+	defs.cubismerhan = {
+		pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
+		// pieces: '011--010.020--010.000.300',
 		piecesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 },
 		puzzles: [
 			'4444.4444.4444.4444',
@@ -38,17 +42,24 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.init = function(){
-		var puzzleDef  = cubismerhan;
+		this.showPuzzle('cube1');
+	}
+
+	proto.showPuzzle = function(code){
 		
+		this.expandVars({puzzleName:code});
+
+		var puzzleDef  = defs[code];
+		var size = 8;
+
 		this.piecesCfg = mi2.copy(puzzleDef.piecesCfg);
-		this.piecesCfg.gridW = 30;
+		this.piecesCfg.gridW = size;
 		
 		this.puzzlesCfg = mi2.copy(puzzleDef.puzzlesCfg);
-		this.puzzlesCfg.gridW = 30;
+		this.puzzlesCfg.gridW = size;
 		
 		var pieces = splitPieces(puzzleDef.pieces);
 		this.loop.setValue(pieces);
-		this.loop.getItem(0).cubeView.drawGridX();
 
 		var puzzles = splitPieces(puzzleDef.puzzles);
 		this.loop2.setValue(puzzles);

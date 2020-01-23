@@ -6,8 +6,9 @@
 		this.ctx.imageSmoothingEnabled = true;
 		this.cubeDraw = new CubeDraw(this.ctx, this.gridW);
 
+
 		this.cfg = cfg;
-		this.setSize(cfg);
+		this.setSize(cfg, 0, 1);
 
 		this.gridStroke = '#ddd';
 		this.gridFill = '#fff';
@@ -16,7 +17,7 @@
 
 	var proto = CubeView3D.prototype;
 
-	proto.setSize = function({wx=3,wy=3,wz=3}={}){
+	proto.setSize = function({wx=3,wy=3,wz=3}={}, resizeCanvas){
 		this.wx = wx;
 		this.wy = wy;
 		this.wz = wz;
@@ -24,10 +25,15 @@
 		this.gh = wx + wy + wz*2;
 		this.gw = wx*2 + wy*2;
 		this.oy = wy + wz*2 - 3;
+		this.offsetY = (this.wy-1)*this.cubeDraw.offset;
 
-		this.canvas.width  = this.gw * this.cfg.gridW;
-		this.canvas.height = this.gh * this.cfg.gridW;
+		if(resizeCanvas) this.resizeCanvas();
 		
+	};
+
+	proto.resizeCanvas = function(){
+		this.canvas.width  = this.gw * this.cfg.gridW + (this.wx-this.wy)*this.cubeDraw.offset;
+		this.canvas.height = this.gh * this.cfg.gridW + (this.wy-this.wx)*this.cubeDraw.offset;		
 	};
 
 	proto.toGrid = function(x=0,y=0,z=0){
@@ -90,6 +96,7 @@
 		return ret;
 	};
 
+/*
 	proto.drawGridX = function(){
 		var ctx = this.ctx;
 		var canvas = this.canvas;
@@ -109,20 +116,34 @@
 			ctx.stroke();
 		}
 	}
+*/
 
-	proto.drawPiece = function(piece){
+	proto.resizeToPiece = function(piece, symetricBottom, resizeCanvas){
+		var size = this.pieceToSize(piece, {}, symetricBottom);
+		this.setSize(size, resizeCanvas);		
+	};
+
+	proto.drawPiece = function(piece, symetricBottom, resizeCanvas){
+
 		if(this.cfg.resizeGrid){
-			this.setSize(this.pieceToSize(piece, {}, true));
+			this.resizeToPiece(piece, symetricBottom, resizeCanvas);
 		}
 		
+		var offset = this.cubeDraw.offset;
 		this.clear();
 		this.drawGrid();
 		
 		for(var x=0; x<this.wx; x++){
+
 			for(var y=this.wy-1; y>=0; y--){
+
 				for(var z=0; z<this.wz; z++){
-					if(piece[x] && piece[x][y] && piece[x][y][z])
-						this.cubeDraw.gmove(this.toGrid(x,y,z)).draw();
+
+					if(piece[x] && piece[x][y] && piece[x][y][z]){
+						this.cubeDraw
+							.move((x-y)*offset, (-x-y)*offset+this.offsetY)
+							.gmove(this.toGrid(x,y,z)).draw();
+					}
 				}
 			}
 		}
@@ -134,9 +155,16 @@
 	}
 
 	proto.drawGrid = function(){
+		var offset = this.cubeDraw.offset;
+		
 		for(var x=0; x<this.wx; x++){
+
 			for(var y=0; y<this.wy; y++){
-				this.cubeDraw.gmove(this.toGrid(x,y,-1)).drawTop(this.gridStroke, this.gridFill);
+				
+				this.cubeDraw
+					.move((x-1-y+1)*offset, (-x-1-y+1)*offset+this.offsetY)
+					.gmove(this.toGrid(x,y,-1))
+					.drawTop(this.gridStroke, this.gridFill);
 			}
 		}
 	};

@@ -9,16 +9,18 @@ function CubeDraw(ctx,gridW,x=0,y=0, gx=0, gy=0){
   this._color3 = "#b0b0b0";
   this._stroke = "#000";
   this.lineWidth = 1;
+  this.offset = Math.round(gridW/2);
   // this.fixAA = 0;
   // ctx.translate(0.5,0.5);
 }
 var proto = CubeDraw.prototype;
 
-proto.move = function(x=0,y=0, gx=0, gy=0){
+proto.move = function(x=0,y=0, gx, gy){
   this.x = x;
   this.y = y;
   return this;
 }
+
 proto.gmove = function(gx=0, gy=0){
 	if(typeof gx == 'object'){
 	  this.gx = gx.gx;
@@ -32,18 +34,20 @@ proto.gmove = function(gx=0, gy=0){
 
 proto.line = function(x0,y0,x1,y1){
   var x = this.x + this.gx * this.gridW;
-  var y = this.x + this.gy * this.gridW;
+  var y = this.y + this.gy * this.gridW;
   this.ctx.moveTo(x + x0 * this.gridW, y + y0 * this.gridW);
   this.ctx.lineTo(x + x1 * this.gridW, y + y1 * this.gridW);
 }
-proto.lineTo = function(x1,y1){
-  var x = this.x + this.gx * this.gridW;
-  var y = this.x + this.gy * this.gridW;
+
+proto.lineTo = function(x1,y1, ox=0, oy=0){
+  var x = this.x + this.gx * this.gridW + ox*this.offset;
+  var y = this.y + this.gy * this.gridW + oy*this.offset;
   this.ctx.lineTo(x + x1 * this.gridW, y + y1 * this.gridW);
 }
-proto.moveTo = function(x0,y0){
-  var x = this.x + this.gx * this.gridW;
-  var y = this.x + this.gy * this.gridW;
+
+proto.moveTo = function(x0,y0, ox=0, oy=0){
+  var x = this.x + this.gx * this.gridW + ox*this.offset;
+  var y = this.y + this.gy * this.gridW + oy*this.offset;
   this.ctx.moveTo(x + x0 * this.gridW, y + y0 * this.gridW);
 }
 
@@ -51,11 +55,11 @@ proto.drawTop = function(stroke, color){
 	var ctx = this.ctx;
   ctx.beginPath();
   // if(this.fixAA) ctx.translate(0.5,0.5);
-  this.moveTo(0,1); 
-  this.lineTo(2,0); 
-  this.lineTo(4,1); 
-  this.lineTo(2,2);
-  this.lineTo(0,1);
+  this.moveTo(0,1,0,1); 
+  this.lineTo(2,0,-1,0); 
+  this.lineTo(4,1,0,-1); 
+  this.lineTo(2,2,1,0);
+  this.lineTo(0,1,0,1);
   ctx.fillStyle = color || this._color1;
   ctx.closePath();
   ctx.fill();
@@ -69,11 +73,11 @@ proto.drawLeft = function(stroke, color){
 
   ctx.beginPath();
   // if(this.fixAA) ctx.translate(0.5,0.5);
-  this.moveTo(0,1); 
-  this.lineTo(2,2); 
-  this.lineTo(2,4); 
-  this.lineTo(0,3);
-  this.lineTo(0,1);
+  this.moveTo(0,1,0,1); 
+  this.lineTo(2,2,1,0); 
+  this.lineTo(2,4,1,0); 
+  this.lineTo(0,3,0,1);
+  this.lineTo(0,1,0,1);
   ctx.fillStyle = this._color2;
   ctx.closePath();
   ctx.fill();
@@ -87,11 +91,11 @@ proto.drawRight = function(stroke, color){
 
   ctx.beginPath();
   // if(this.fixAA) ctx.translate(0.5,0.5);
-  this.moveTo(2,2); 
-  this.lineTo(4,1); 
-  this.lineTo(4,3); 
-  this.lineTo(2,4);
-  this.lineTo(2,2);
+  this.moveTo(2,2,1,0); 
+  this.lineTo(4,1,0,-1); 
+  this.lineTo(4,3,0,-1); 
+  this.lineTo(2,4,1,0);
+  this.lineTo(2,2,1,0);
   ctx.fillStyle = this._color3;
   ctx.closePath();
   ctx.fill();
