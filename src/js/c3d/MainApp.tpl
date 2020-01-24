@@ -5,12 +5,15 @@
 	<button class="bt1" x-click={this.showPuzzle('knossos')}>knossos</button>
 	<button class="bt1" x-click={this.showPuzzle('cubismerhan')}>cubismerhan</button>
 	<button class="bt1" x-click={this.showPuzzle('coffinsq')}>Coffin's Quintet</button>
+	<button class="bt1" x-click={this.showPuzzle('flat_out')}>Flat Out</button>
 </div>
 
-<h1>{'pieces'}({state.puzzleName})</h1>
+<h1>{state.puzzleName} <span p='link'></span></h1>
+<div p="credits"></div>
+<h2>{'pieces'}</h2>
 (dblclick: animate angle, CTRL+click: rotate)
 <div p="loop" as="base/Loop" item="c3d/PieceCanvas"/>
-<h1>{'puzzles'}</h1>
+<h2>{'puzzles'}</h2>
 <div p="loop2" as="base/Loop" item="c3d/PieceCanvas"/>
 
 

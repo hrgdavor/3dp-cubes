@@ -17,6 +17,17 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
 	};
 
+	defs.flat_out = {
+		name: 'Flat Out',
+		link: 'http://puzzlewillbeplayed.com/333/FlatOut/',
+		designer: 'Martin H. Watson',
+		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Watson.xml',
+		pieces: '11.11.01--11.01.11--111.001.001--001.111.001--001.111.010--001.011.110--001.111.100--010.111.010--1.1',
+		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
+		puzzles: '333.333.333',
+		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
+	};
+
 	defs.coffinsq = {
 		name: 'Coffin\'s Quintet',
 		link: 'http://puzzlewillbeplayed.com/333/CoffinsQuintet/',
@@ -40,6 +51,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	defs.cubismerhan = {
+		link:'https://diypuzzles.wordpress.com/2013/04/22/cubismerhan/',
+		designer: 'Erhan Cubukcuoglu',
+		designerLink: 'https://diypuzzles.wordpress.com/about/',
 		pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
 		// pieces: '011--010.020--010.000.300',
 		piecesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 },
@@ -58,7 +72,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.init = function(){
-		this.showPuzzle('coffinsq');
+		this.showPuzzle('cubismerhan');
 	}
 
 	proto.showPuzzle = function(code){
@@ -68,6 +82,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var size = 8;
 
 		this.expandVars({puzzleName: puzzleDef.name || code});
+
+		this.link.setHtml(puzzleDef.link ? '<a target="_blank" href="'+puzzleDef.link+'">(link)</a>':'');
+		var str = '';
+		if(puzzleDef.designer) str += 'Designer: <a target="_blank" href="'+puzzleDef.designerLink+'">'+puzzleDef.designer+'</a>. ';
+		this.credits.setHtml(str);
 
 		this.piecesCfg = mi2.copy(puzzleDef.piecesCfg);
 		this.piecesCfg.gridW = size;
