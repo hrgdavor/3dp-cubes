@@ -1,6 +1,6 @@
 	function CubeView3D(canvas,cfg){
 		this.gridW = cfg.gridW;
-
+		
 		this.canvas = canvas;
 		this.ctx = canvas.getContext("2d");
 		this.ctx.imageSmoothingEnabled = true;
