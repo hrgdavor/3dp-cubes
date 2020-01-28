@@ -1,7 +1,7 @@
 function CubeDraw2(ctx,angle, rx, x = 0, y = 0) {
   this.ctx = ctx;
   this.move(x, y);
-  this.newPoints(angle, rx)
+  this.angle(angle, rx)
   this._color1 = "#f0f0f0";
   this._color2 = "#d2d2d2";
   this._color3 = "#b0b0b0";
@@ -24,10 +24,10 @@ proto.move = function(x, y) {
   return this;
 }
 
-proto.newPoints = function(angle, rx){
-  this.angle = angle
-  this.rx = rx
-  this.points = cubePointsForAngle(angle, rx)
+proto.angle = function(angle, rx){
+  this._angle = angle
+  if(rx !== void 0) this.rx = rx
+  this.points = cubePointsForAngle(angle, this.rx)
   return this
 }
 

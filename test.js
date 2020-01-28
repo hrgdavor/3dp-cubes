@@ -20,8 +20,8 @@ function init(){
   var cDraw = new CubeDraw2(ctx, 0,100, cx, cy)
   var cDraw2 = new CubeDraw2(ctx, 0, 20)
   function animateAngle(){
-    cDraw.newPoints(i, rx)
-    cDraw2.newPoints(i, 20)
+    cDraw.angle(i, rx)
+    cDraw2.angle(i, 20)
     cDraw.drawTop()
     var points = cDraw.points
     var start = pointSum(points[0], center)
@@ -32,7 +32,7 @@ function init(){
     cDraw2.move(start)
     cDraw2.draw()
     //cDraw2. drawTop(20)
-    //i+=1
+    // i+=1
     setTimeout(animateAngle, 50)
   } 
   animateAngle()

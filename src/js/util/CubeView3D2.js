@@ -22,25 +22,20 @@
 	  this.wy = wy;
 	  this.wz = wz;
 
-	  this.gh = wx + wy + wz * 2;
-	  this.gw = wx * 2 + wy * 2;
-	  this.oy = wy + wz * 2 - 3;
-	  this.offsetY = (this.wy - 1) * this.cubeDraw.offset;
-
 	  if (resizeCanvas) this.resizeCanvas();
 
 	};
 
-	proto.resizeCanvas = function() {
+	proto.angle = function(angle, rx){
+		this.cubeDraw.angle(angle, rx)
+		this.dx = this.cubeDraw.getDx()
+		this.dy = this.cubeDraw.getDy()
+		return this
+	}
+
+	proto.resizeCanvas = function(){
 	  this.canvas.width = this.gw * this.cfg.gridW + (this.wx - this.wy) * this.cubeDraw.offset;
 	  this.canvas.height = this.gh * this.cfg.gridW + (this.wy - this.wx) * this.cubeDraw.offset;
-	};
-
-	proto.toGrid = function(x = 0, y = 0, z = 0) {
-	  return {
-	    gx: x * 2 + y * 2,
-	    gy: this.oy - y + x - z * 2
-	  }
 	};
 
 	proto.pieceToSize = function(piece, { wx = 1, wy = 1, wz = 1 } = {}, symetricBottom) {
@@ -95,28 +90,6 @@
 	  }
 	  return ret;
 	};
-
-	/*
-		proto.drawGridX = function(){
-			var ctx = this.ctx;
-			var canvas = this.canvas;
-			for(var x=1; x<this.gw; x++){
-				ctx.beginPath();
-		  		ctx.strokeStyle = x % 4 == 0 ? 'red':'gray';
-				ctx.moveTo(x*this.gridW,0);
-				ctx.lineTo(x*this.gridW, canvas.height);
-				ctx.stroke();
-			}
-			for(var y=1; y<this.gh; y++){
-				ctx.beginPath();
-		  		ctx.strokeStyle = y % 4 == 2 ? 'red':'gray';
-
-				ctx.moveTo(0, y*this.gridW,0, 0);
-				ctx.lineTo(canvas.height, y*this.gridW);
-				ctx.stroke();
-			}
-		}
-	*/
 
 	proto.resizeToPiece = function(piece, symetricBottom, resizeCanvas) {
 	  var size = this.pieceToSize(piece, {}, symetricBottom);
