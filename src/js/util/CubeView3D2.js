@@ -19,24 +19,32 @@
 
 	var proto = CubeView3D2.prototype;
 
-	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resizeCanvas) {
+	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
 	  this.wx = wx;
 	  this.wy = wy;
 	  this.wz = wz;
 
-
-
-	  if (resizeCanvas){
+	  if (resize){
 	    if(this.fitCanvas){
-	      this.resizeView()
+	    	this.resizeView()
 	    }else{
-  	    this.resizeCanvas();
+  	    	this.resizeCanvas();
 	    }
 	  }
 	};
 
+	proto.calcBounds = function(rx){
+		if(rx == void 0) rx = this.rx;
+		var ret = {}
+		if(this.sizeForRotate){
+			var w = Math.max(this.wx, this.wy);
+		}
+		
+		return ret;
+	}
+
 	proto.resizeCanvas = function() {
-	  
+
 	};
 	
 	proto.resizeView = function(){

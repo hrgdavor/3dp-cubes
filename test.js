@@ -31,7 +31,7 @@ function init(){
     start = pointSum(start, pointScale(dy, 0.5))
     cDraw2.move(start)
     cDraw2.draw()
-    //cDraw2. drawTop(20)
+    // cDraw2. drawTop(20)
     // i+=1
     setTimeout(animateAngle, 50)
   } 

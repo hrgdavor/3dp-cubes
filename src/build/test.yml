@@ -7,5 +7,5 @@
 
 - type: LiveReload
   input: "./"
-  include: [ "test.html", "style.css" ]
+  include: [ "test.html", "style.css", "test.js", "src/js/**.*" ]
   pauseAfterCss: 200
