@@ -7,24 +7,30 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cView2 = new CubeView3D2(canvas2, {angle:i, rx: 20, wx:6,wy:6, sizeForRotate:1})
+  var cfg = {angle:i, rx: 40, wx:3,wy:3, sizeForRotate:1, symetricBottom:0}
+  var cView2 = new CubeView3D2(canvas2, cfg)
   
-  var piece = cView2.pieceToArray('022220.333333.333333.022220')
+  var piece = cView2.pieceToArray('300003.000000.300013')
+  // var piece = cView2.pieceToArray('022223.333333.333333.022223')
+  piece = cView2.rotatePieceL(piece);
   
-  var i=45
-  
-  
+  var i=30
+  var first = 1;
+
   function animateAngle(){
     cView2.setAngle(i)
-    //cView2.resizeCanvas()
-    cView2.drawPiece(piece)
-    // i += 2
+    cView2.drawPiece(piece, first || !cfg.sizeForRotate)
+    i += 2
+    first = 0
     
-    //setTimeout(animateAngle, 30) 
+    // setTimeout(animateAngle, 30) 
   }
   
   var pdown;
   var startX, startY, startAngle;
+  mi2JS.listen(canvas2, 'pointerup', function(evt){
+    pdown = false
+  });
   mi2JS.listen(canvas2, 'pointerdown', function(evt){
     pdown = true
     startAngle = i
@@ -43,9 +49,9 @@ function init(){
   });
 
   mi2JS.listen(canvas2, 'pointermove', function(evt){
-    i = startAngle - (evt.offsetX - startX)
     
     if(pdown){
+      i = startAngle - (evt.offsetX - startX)
       animateAngle()
     } 
   });

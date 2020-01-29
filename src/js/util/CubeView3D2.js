@@ -1,4 +1,4 @@
-	function CubeView3D2(canvas, cfg={}) {
+	function CubeView3D2(canvas, cfg={}, resize) {
 	  
 	  this.cfg = cfg = {
 	      rx: 10,
@@ -17,13 +17,13 @@
 	  this.ctx.imageSmoothingEnabled = true;
 
 	  this.setAngle(cfg.angle, cfg.rx)
-	  this.setGridSize(cfg, 1)
+	  this.setGridSize(cfg, resize)
 
 	}
 
 	var proto = CubeView3D2.prototype;
   
-  proto.setAngle = function(angle, rx){
+proto.setAngle = function(angle, rx){
     angle = angle % 360
     if(angle < 0) angle += 360
     this.cfg.angle = angle
@@ -37,11 +37,10 @@
       this.cubeDraw.angle(angle, rx)
     }
     this.bounds = this.getBounds()
-  }
+}
   
 	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
 	  var cfg = this.cfg
-	  console.log('setgridsize', wx, wy)
 	  
 	  cfg.wx = wx
 	  cfg.wy = wy
@@ -57,58 +56,70 @@
 	};
 
 	proto.getBounds = function(){
-    var dx = this.cubeDraw.getDx()
-    var dy = this.cubeDraw.getDy()
-    var cfg = this.cfg
+		var dx = this.cubeDraw.getDx()
+		var dy = this.cubeDraw.getDy()
+		var cfg = this.cfg
     
     
-    var rx = cfg.rx
-    var angle = cfg.angle
+		var rx = cfg.rx
+		var angle = cfg.angle
 		var ret = {dx, dy, rx}
+		
 		var wx = cfg.wx
 		var wy = cfg.wy
 		var wz = cfg.wz
-		var wmax = Math.max(wx, wy)
-		console.log(wx,wy)
+		
+		var gridH = Math.max(wx, wy)
 		
 		if(cfg.sizeForRotate){
-			//wx = wy = wmax
-			var gridH = (wx + wy) * rx / 2
+			// angle where piece takes most space to draw
+			var myAngle = Math.atan(wx/wy) / Math.PI * 180;
+
+			var dx1 = cubeDxForAngle(myAngle, rx);
+			var dy1 = cubeDyForAngle(myAngle, rx);
+
+		    var gridH = (Math.abs(dx1.y*wx) + Math.abs(dy1.y*wy))
+
 			ret.h = wz * rx + gridH
-			ret.w = wx * rx * 2
-			ret.cx = ret.w / 2
-		  ret.cy = wz * rx + gridH / 2
-		  ret.sx = ret.cx - (dx.x + dy.x) * (wx - 1) / 2
-		  ret.sy = ret.cy - (dx.y + dy.y) * (wx - 1) / 2
-	
+			ret.w = gridH * 2
+
 		}else{
 		
-		  var gridH = Math.abs(dx.y*wx) + Math.abs(dy.y*wy)
-		  ret.h = wz * rx + gridH
-		  ret.w = Math.abs(dx.x*wx) + Math.abs(dy.x*wy)
-		  if(angle < 90){
-		    ret.sx = (dx.x+dy.x) / 2
-		    ret.sy = wz * rx - dy.y * (wy-0.5) + dx.y /2
-		  }else if(angle<180) {
-		    ret.sx = -dx.x * (wx-0.5) + dy.x / 2
-		    ret.sy = wz * rx + (dy.y + dx.y) / 2
-		  }else if(angle < 270){
-		    ret.sx = ret.w + (dx.x + dy.x) / 2
-		    ret.sy = ret.h - dy.y * (wy - 0.5) + dx.y/2
-		  }else{
-		    ret.sx = ret.w - dx.x * (wx-0.5) + dy.x / 2
-		    ret.sy = ret.h + (dy.y + dx.y) / 2
-		  }
+			gridH = Math.abs(dx.y*wx) + Math.abs(dy.y*wy)
+			
+			ret.h = wz * rx + gridH
+			ret.w = Math.abs(dx.x*wx) + Math.abs(dy.x*wy)
+		  // console.log(gridH, ret.w, ret.w/gridH);
+		  // if(angle < 90){
+		  //   ret.sx = (dx.x+dy.x) / 2
+		  //   ret.sy = wz * rx - dy.y * (wy-0.5) + dx.y /2
+		  // }else if(angle<180) {
+		  //   ret.sx = -dx.x * (wx-0.5) + dy.x / 2
+		  //   ret.sy = wz * rx + (dy.y + dx.y) / 2
+		  // }else if(angle < 270){
+		  //   ret.sx = ret.w + (dx.x + dy.x) / 2
+		  //   ret.sy = ret.h - dy.y * (wy - 0.5) + dx.y/2
+		  // }else{
+		  //   ret.sx = ret.w - dx.x * (wx-0.5) + dy.x / 2
+		  //   ret.sy = ret.h + (dy.y + dx.y) / 2
+		  // }
+
 		}
-		
+
+		ret.cx = ret.w / 2
+		ret.cy = wz * rx + gridH / 2
+	  
+		ret.sx = ret.cx - dx.x * (wx-1)/2 - dy.x * (wy-1)/2
+		ret.sy = ret.cy - dx.y * (wx-1)/2 - dy.y * (wy-1)/2
+
 		return ret;
 	}
 
 	proto.resizeCanvas = function() {
-    var bounds = this.bounds = this.getBounds()
-    
-    this.canvas.width = bounds.w
-    this.canvas.height = bounds.h
+		var bounds = this.bounds = this.getBounds()
+
+		this.canvas.width = bounds.w
+		this.canvas.height = bounds.h
 	};
 	
 	proto.resizeView = function(){
@@ -133,19 +144,21 @@
 
 	proto.pieceToSize = function(piece, { wx = 1, wy = 1, wz = 1 } = {}, symetricBottom) {
 
-	  var newSize = { wx: Math.max(wx, piece.length), wy, wz };
+		var newSize = { wx: Math.max(wx, piece.length), wy, wz };
 
-	  piece.forEach(liney => {
-	    newSize.wy = Math.max(newSize.wy, liney.length);
-	    liney.forEach(linez => {
-	      newSize.wz = Math.max(newSize.wz, linez.length);
-	    })
-	  });
-	  if (symetricBottom) {
-	    newSize.wx = newSize.wy = Math.max(newSize.wx, newSize.wy);
-	  }
-	  return newSize;
-	};
+		piece.forEach(liney => {
+			newSize.wy = Math.max(newSize.wy, liney.length);
+			
+			liney.forEach(linez => {
+				newSize.wz = Math.max(newSize.wz, linez.length);
+			})
+		});
+		
+		if (symetricBottom) {
+			newSize.wx = newSize.wy = Math.max(newSize.wx, newSize.wy);
+		}
+		return newSize;
+	}
 
 	proto.pieceToArray = function(str) {
 	  var ret = [];
