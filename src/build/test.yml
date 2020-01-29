@@ -1,0 +1,11 @@
+
+- type: Proxy
+  port: 8080
+  items: []
+  noCache: [ "/", "/test.html" ]
+  wwwRoot: "./"
+
+- type: LiveReload
+  input: "./"
+  include: [ "test.html", "style.css" ]
+  pauseAfterCss: 200
