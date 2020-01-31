@@ -2,53 +2,102 @@
 
 function init(){
   
-
+  var test = {a:1,b:3}
+  
   var canvas = document.getElementById('canvas')
   var canvas2 = document.getElementById('canvas2')
   var cubeView = new CubeView3D(canvas, {gridW: 10});
+  
+  canvas2.style.touchAction = 'none'
   cubeView.cubeDraw.offset=0
-  var piece = cubeView.pieceToArray('1')
+  var piece = cubeView.pieceToArray('022220.333333.333333.022220')
   cubeView.drawPiece(piece, 1,1)
   
-  this.ctx = canvas2.getContext("2d");
   
-  var cx =  100
-  var rx = 100
-  var cy = 150;
-  var center = {x:cx, y:cy} 
-  var i=35
-  var cDraw = new CubeDraw2(ctx, 0,100, cx, cy)
-  var cDraw2 = new CubeDraw2(ctx, 0, 20)
+  var i=210
+  var cView2 = new CubeView3D2(canvas2, {angle:i, rx: 20, wx:6,wy:6, sizeForRotate:1})
+  
   function animateAngle(){
-    cDraw.angle(i, rx)
-    cDraw2.angle(i, 20)
-    cDraw.drawTop()
-    var points = cDraw.points
-    var start = pointSum(points[0], center)
-    var dx = cDraw2.getDx()
-    var dy = cDraw2.getDy()
-    start = pointSum(start, pointScale(dx, 0.5))
-    start = pointSum(start, pointScale(dy, 0.5))
-    cDraw2.move(start)
-    cDraw2.draw()
-    // cDraw2. drawTop(20)
-    // i+=1
-    setTimeout(animateAngle, 50)
-  } 
+    cView2.setAngle(i)
+    //cView2.resizeCanvas()
+    cView2.drawPiece(piece)
+    // i += 2
+    
+    //setTimeout(animateAngle, 30) 
+  }
+  
+  var pdown;
+  var startX, startY, startAngle;
+  mi2JS.listen(canvas2, 'pointerdown', function(evt){
+    pdown = true
+    startAngle = i
+    startX = evt.offsetX
+    startY = evt.offsetY
+    
+    var cube = cView2.findCube(startX, startY)
+    
+    if(cube && 0){
+      pdown = false
+      cView2.drawCubeRest(-1)
+      cView2.drawCube(cube, 'red')
+      cView2.drawCubeRest(cube.index)
+    }
+
+  });
+
+  mi2JS.listen(canvas2, 'pointermove', function(evt){
+    i = startAngle - (evt.offsetX - startX)
+    
+    if(pdown){
+      animateAngle()
+    } 
+  });
+  
+
+
   animateAngle()
+}
+
+function logObj(obj){
+  var str = ''
+  for(var p in obj) {
+    try{
+    str += p + ': ' + JSON.stringify(obj[p]) + '<br>\n'
+    }catch(e){} 
+  } 
+  console.log(str) 
 }
 
 function cubePointsForAngle(angle, rx){
   var ry = rx / 2
+  angle = angle % 90
+  if (angle < 0) angle += 90
+  
   angle = Math.PI * (angle - 45) / 180
   var points = []
-  var sin = Math.sin(angle) * -1
-  var cos = Math.cos(angle) * -1
-  points.push({x: cos * rx, y: sin * ry})
-  points.push({x:-sin * rx, y: cos * ry})
+  var sin = Math.sin(angle)
+  var cos = Math.cos(angle)
   points.push({x:-cos * rx, y:-sin * ry})
   points.push({x: sin * rx, y:-cos * ry})
+  points.push({x: cos * rx, y: sin * ry})
+  points.push({x:-sin * rx, y: cos * ry})
   return points
+}
+
+function cubeDxForAngle(angle, rx){
+  angle = Math.PI * (angle - 45) / 180
+  var sin = Math.sin(angle)
+  var cos = Math.cos(angle)
+  return {x: (cos - sin) * rx, y: (sin + cos) * rx/2} 
+  
+}
+
+function cubeDyForAngle(angle, rx) {
+  angle = Math.PI * (angle - 45) / 180
+  var sin = Math.sin(angle)
+  var cos = Math.cos(angle)
+  return { x: (cos + sin) * rx, y: (sin - cos) * rx / 2 }
+  
 }
 
 function pointDelta(p1, p2){

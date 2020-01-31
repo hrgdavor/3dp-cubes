@@ -1,31 +1,53 @@
-	function CubeView3D2(canvas, cfg) {
-	  this.rx = cfg.rx;
-
+	function CubeView3D2(canvas, cfg={}) {
+	  
+	  this.cfg = cfg = {
+	      rx: 10,
+	      angle: 30,
+	      wx: 3, wy: 3, wz: 3,
+	      fitCanvas: 0,
+	      sizeForRotate: 1,
+	      resizeGrid: 1,
+	      symetricBottom: 0,
+	      gridStroke: '#ddd',
+	      gridFill: '#fff'
+	  ,... cfg}
+    
 	  this.canvas = canvas;
 	  this.ctx = canvas.getContext("2d");
 	  this.ctx.imageSmoothingEnabled = true;
-	  this.cubeDraw = new CubeDraw2(this.ctx, 35, this.rx);
 
+	  this.setAngle(cfg.angle, cfg.rx)
+	  this.setGridSize(cfg, 1)
 
-	  this.cfg = cfg;
-	  this.setSize(cfg, 0, 1);
-
-	  this.gridStroke = '#ddd';
-	  this.gridFill = '#fff';
-	  
-	  this.fitCanvas = 0 
-	  this.sizeForRotate = 0
 	}
 
 	var proto = CubeView3D2.prototype;
-
+  
+  proto.setAngle = function(angle, rx){
+    angle = angle % 360
+    if(angle < 0) angle += 360
+    this.cfg.angle = angle
+    
+    if(rx === void 0) rx = this.cfg.rx
+    this.cfg.rx = rx
+    
+    if(!this.cubeDraw){
+      this.cubeDraw = new CubeDraw2(this.ctx, angle, rx);
+    }else{
+      this.cubeDraw.angle(angle, rx)
+    }
+    this.bounds = this.getBounds()
+  }
+  
 	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
-	  this.wx = wx;
-	  this.wy = wy;
-	  this.wz = wz;
+	  var cfg = this.cfg
+	  
+	  cfg.wx = wx
+	  cfg.wy = wy
+	  cfg.wz = wz
 
 	  if (resize){
-	    if(this.fitCanvas){
+	    if(this.cfg.fitCanvas){
 	    	this.resizeView()
 	    }else{
   	    	this.resizeCanvas();
@@ -33,29 +55,79 @@
 	  }
 	};
 
-	proto.calcBounds = function(rx){
-		if(rx == void 0) rx = this.rx;
-		var ret = {}
-		if(this.sizeForRotate){
-			var w = Math.max(this.wx, this.wy);
+	proto.getBounds = function(){
+    var dx = this.cubeDraw.getDx()
+    var dy = this.cubeDraw.getDy()
+    var cfg = this.cfg
+    
+    
+    var rx = cfg.rx
+    var angle = cfg.angle
+		var ret = {dx, dy, rx}
+		var wx = cfg.wx
+		var wy = cfg.wy
+		var wz = cfg.wz
+		var wmax = Math.max(wx, wy)
+		
+		
+		if(cfg.sizeForRotate){
+			wx = wy = wmax
+			var gridH = wx * rx
+			ret.h = wz * rx + gridH 
+			ret.w = wx * rx * 2
+			ret.cx = ret.w / 2
+		  ret.cy = wz * rx + gridH / 2
+		  ret.sx = ret.cx - (dx.x + dy.x) * (wx - 1) / 2
+		  ret.sy = ret.cy - (dx.y + dy.y) * (wx - 1) / 2
+	
+		}else{
+		
+		  var gridH = Math.abs(dx.y*wx) + Math.abs(dy.y*wy)
+		  ret.h = wz * rx + gridH
+		  ret.w = Math.abs(dx.x*wx) + Math.abs(dy.x*wy)
+		  if(angle < 90){
+		    ret.sx = (dx.x+dy.x) / 2
+		    ret.sy = wz * rx - dy.y * (wy-0.5) + dx.y /2
+		  }else if(angle<180) {
+		    ret.sx = -dx.x * (wx-0.5) + dy.x / 2
+		    ret.sy = wz * rx + (dy.y + dx.y) / 2
+		  }else if(angle < 270){
+		    ret.sx = ret.w + (dx.x + dy.x) / 2
+		    ret.sy = ret.h - dy.y * (wy - 0.5) + dx.y/2
+		  }else{
+		    ret.sx = ret.w - dx.x * (wx-0.5) + dy.x / 2
+		    ret.sy = ret.h + (dy.y + dx.y) / 2
+		  }
 		}
 		
 		return ret;
 	}
 
 	proto.resizeCanvas = function() {
-
+    var bounds = this.bounds = this.getBounds()
+    
+    this.canvas.width = bounds.w
+    this.canvas.height = bounds.h
 	};
 	
 	proto.resizeView = function(){
+	  var bounds = this.bounds = this.getBounds()
+	  var wRatio = this.canvas.width / bounds.w 
+	  var hRatio = this.canvas.height / bounds.h
+	  var rx = bounds.rx * Math.min(wRatio, hRatio)
+	  this.setAngle(this.cubeDraw._angle, rx)
 	  
 	}
 
 	proto.toPx = function(x = 0, y = 0, z = 0) {
-	  return {
-	    gx: x * 2 + y * 2,
-	    gy: this.oy - y + x - z * 2
-	  }
+	   var bounds = this.bounds
+	   var dx = bounds.dx
+	   var dy = bounds.dy
+	   
+	   return {
+	     x: bounds.sx + dx.x * x + dy.x * y, 
+	     y: bounds.sy + dx.y * x + dy.y * y - z * bounds.rx
+	   }
 	};
 
 	proto.pieceToSize = function(piece, { wx = 1, wy = 1, wz = 1 } = {}, symetricBottom) {
@@ -95,7 +167,7 @@
 	  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 
-	proto.rotatePiece = function(piece) {
+	proto.rotatePieceR = function(piece) {
 	  var maxY = 0;
 	  piece.forEach(row => { maxY = Math.max(maxY, row.length) });
 
@@ -111,75 +183,108 @@
 	  return ret;
 	};
 
-	/*
-		proto.drawGridX = function(){
-			var ctx = this.ctx;
-			var canvas = this.canvas;
-			for(var x=1; x<this.gw; x++){
-				ctx.beginPath();
-		  		ctx.strokeStyle = x % 4 == 0 ? 'red':'gray';
-				ctx.moveTo(x*this.gridW,0);
-				ctx.lineTo(x*this.gridW, canvas.height);
-				ctx.stroke();
-			}
-			for(var y=1; y<this.gh; y++){
-				ctx.beginPath();
-		  		ctx.strokeStyle = y % 4 == 2 ? 'red':'gray';
+  proto.rotatePieceL = function(piece) {
+    var maxY = 0;
+    piece.forEach(row => { maxY = Math.max(maxY, row.length) });
+  
+    var ret = [];
+    for (var y = maxY - 1; y >= 0; y--) {
+      for (var x = 0; x < piece.length; x++) {
+        var newY = y
+        if (!ret[newY]) ret[newY] = [];
+        var z = piece[x][y];
+        ret[newY].unshift(z ? mi2JS.copy(z) : []);
+      }
+    }
+    return ret;
+  };
 
-				ctx.moveTo(0, y*this.gridW,0, 0);
-				ctx.lineTo(canvas.height, y*this.gridW);
-				ctx.stroke();
-			}
-		}
-	*/
-
-	proto.resizeToPiece = function(piece, symetricBottom, resizeCanvas) {
-	  var size = this.pieceToSize(piece, {}, symetricBottom);
-	  this.setSize(size, resizeCanvas);
+	proto.resizeToPiece = function(piece, resizeCanvas) {
+	  var size = this.pieceToSize(piece, {}, this.cfg.symetricBottom);
+	  this.setGridSize(size, resizeCanvas);
 	};
 
-	proto.drawPiece = function(piece, symetricBottom, resizeCanvas) {
+	proto.drawPiece = function(piece, resizeCanvas) {
 
 	  if (this.cfg.resizeGrid) {
-	    this.resizeToPiece(piece, symetricBottom, resizeCanvas);
+	    this.resizeToPiece(piece, resizeCanvas);
 	  }
-
+	  
+    var cfg = this.cfg
+    var cubes = this.cubes = []
 	  var offset = this.cubeDraw.offset;
+	  var angle = this.cubeDraw._angle
 	  this.clear();
 	  this.drawGrid();
+	  
+	  var revX = angle > 180
+	  var startX = revX ? cfg.wx-1 : 0
+	  var endX = revX ? -1 : cfg.wx 
+	  var stepX = revX ? -1 : 1
+	  
+	  var revY = angle < 90 || angle > 270
+	  var startY = revY ? cfg.wy-1 : 0
+	  var endY = revY ? -1 : cfg.wy 
+	  var stepY = revY ? -1 : 1
+	  
 
-	  for (var x = 0; x < this.wx; x++) {
+	  for (var x = startX; x != endX; x+=stepX) {
 
-	    for (var y = this.wy - 1; y >= 0; y--) {
+	    for (var y = startY; y != endY ; y+=stepY) {
 
-	      for (var z = 0; z < this.wz; z++) {
+	      for (var z = 0; z < cfg.wz; z++) {
 
 	        if (piece[x] && piece[x][y] && piece[x][y][z]) {
+	          var pos = this.toPx(x,y,z)
 	          this.cubeDraw
-	            .move((x - y) * offset, (-x - y) * offset + this.offsetY)
-	            .gmove(this.toGrid(x, y, z)).draw();
+	            .move(pos)
+	            .draw();
+	            cubes.push({x, y, z, pos})
 	        }
 	      }
 	    }
 	  }
+	  //this.cubes = cubes.reverrse()
 
 	}
-
-	proto.drawCube = function(x = 0, y = 0, z = 0) {
-	  this.cubeDraw.gmove(this.toGrid(x, y, z)).draw();
+	
+	proto.findCube = function(px, py){
+	  var rx = this.cfg.rx
+	  var rx2 = rx*rx
+	  for(var i=this.cubes.length-1; i>=0; i--){
+	    var cube = this.cubes[i]
+	    var dx = cube.pos.x - px
+	    var dy = cube.pos.y - py
+	    
+	    if(dx*dx + dy*dy < rx2) {
+	      cube.index = i
+	      return cube
+	    } 
+	  }
 	}
+	
+	proto.drawCube = function(cube, stroke){
+	  this.cubeDraw.draw(cube.pos,void 0,stroke)
+	}
+	
+	proto.drawCubeRest = function(index){
+	  for(var i=index+1; i<this.cubes.length; i++){
+	    this.cubeDraw.draw(this.cubes[i].pos)
+	  }
+	}
+
 
 	proto.drawGrid = function() {
-	  var offset = this.cubeDraw.offset;
+	  var cfg = this.cfg
+	  
 
-	  for (var x = 0; x < this.wx; x++) {
+	  for (var x = 0; x < cfg.wx; x++) {
 
-	    for (var y = 0; y < this.wy; y++) {
-
+	    for (var y = 0; y < cfg.wy; y++) {
+       
 	      this.cubeDraw
-	        .move((x - 1 - y + 1) * offset, (-x - 1 - y + 1) * offset + this.offsetY)
-	        .gmove(this.toGrid(x, y, -1))
-	        .drawTop(this.gridStroke, this.gridFill);
+	        .move(this.toPx(x,y))
+	        .drawTop(0, cfg.gridStroke, cfg.gridFill)
 	    }
 	  }
 	};

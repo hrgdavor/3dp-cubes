@@ -25,18 +25,37 @@ proto.move = function(x, y) {
 }
 
 proto.angle = function(angle, rx){
+  angle = angle % 360
+  if (angle < 0) angle += 360
+  
   this._angle = angle
+  this.flipColors = (angle >= 90 && angle < 180) || angle >= 270
   if(rx !== void 0) this.rx = rx
   this.points = cubePointsForAngle(angle, this.rx)
+  //this.rotatePoints(this.points, angle)
   return this
 }
 
+proto.rotatePoints = function(points, angle){
+  while(angle > 90){
+    points.unshift(points.pop())
+    angle -= 90
+  }
+}
+
 proto.getDx = function(){
-  return pointDelta(this.points[0], this.points[3])
+  return cubeDxForAngle(this._angle, this.rx)
 }
 
 proto.getDy = function() {
-  return pointDelta(this.points[0], this.points[1])
+  return cubeDyForAngle(this._angle, this.rx)
+}
+proto.getDx2 = function(){
+  return cubeDxForAngle(this._angle % 90, this.rx)
+}
+
+proto.getDy2 = function() {
+  return cubeDyForAngle(this._angle % 90, this.rx)
 }
 
 proto.line = function(p1, p2, oy=0) {
@@ -88,7 +107,7 @@ proto.drawLeft = function(stroke, color) {
   this.lineTo(p[3]);
   this.lineTo(p[0]);
   
-  ctx.fillStyle = this._color2;
+  ctx.fillStyle = color || (this.flipColors ? this._color3 : this._color2)
   ctx.closePath();
   ctx.fill();
 
@@ -107,7 +126,7 @@ proto.drawRight = function(stroke, color) {
   this.lineTo(p[2], rx);
   this.lineTo(p[2]);
   this.lineTo(p[3]);
-  ctx.fillStyle = this._color3;
+  ctx.fillStyle = color || (this.flipColors ? this._color2 : this._color3)
   ctx.closePath();
   ctx.fill();
 
@@ -130,32 +149,13 @@ proto.applyStroke = function(stroke) {
   this.ctx.strokeStyle = stroke || this._stroke;
 }
 
-proto.draw = function(x, y) {
+proto.draw = function(x, y, stroke) {
   if(x !== void 0) this.move(x,y)
 
   
-  this.drawLeft();
-  this.drawRight();
-  this.drawTop(this.rx);
+  this.drawLeft(stroke);
+  this.drawRight(stroke);
+  this.drawTop(this.rx, stroke);
 
-  return this;
-}
-
-proto.drawLines = function(gx, gy) {
-  if (gx != void 0 && gy != void 0) this.gmove(gx, gy);
-
-  this.line(0, 1, 2, 0);
-  this.line(2, 0, 4, 1);
-  this.line(0, 1, 2, 2);
-  this.line(2, 2, 4, 1);
-
-  this.line(0, 1, 0, 3);
-  this.line(2, 2, 2, 4);
-  this.line(4, 1, 4, 3);
-
-  this.line(0, 3, 2, 4);
-  this.line(2, 4, 4, 3);
-
-  this.ctx.stroke();
   return this;
 }
