@@ -47,7 +47,7 @@ proto.setAngle = function(angle, rx){
 	  cfg.wz = wz
 
 	  if (resize){
-	    if(this.cfg.fitCanvas){
+	    if(this.cfg.fitCanvas){ 
 	    	this.resizeView()
 	    }else{
   	    	this.resizeCanvas();
