@@ -12,25 +12,22 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		
 		this.listen(this.canvas.el, 'pointerup', function(evt){
 			pdown = false
+			this.canvas.el.releasePointerCapture(evt.pointerId)
 		});
 
 		this.listen(this.canvas.el, 'pointerdown', function(evt){
 			var now = Date.now();
 
 			if(!evt.ctrlKey && now - this.__lastDown < 300){
-				
-				this.animDirection *= -1;
+				this.animDirection = evt.offsetX < this.el.offsetWidth / 2 ? 1:-1;
 				this.startAnim();
-
-			}else if(evt.ctrlKey){
-
-				this.setValue(this.cubeView.rotatePieceL(this.piece));
-
 			}else{
 
 				cancelAnimationFrame(this.__anim)
 
 				pdown = true
+				this.canvas.el.setPointerCapture(evt.pointerId)
+				
 				startAngle = this.cubeView.cfg.angle
 				startX = evt.offsetX
 				startY = evt.offsetY

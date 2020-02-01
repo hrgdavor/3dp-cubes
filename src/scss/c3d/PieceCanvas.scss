@@ -1,3 +1,6 @@
 [as="c3d/PieceCanvas"]{
-
+	> canvas{
+		touch-action: pan-y;
+		// touch-action: none;
+	}
 }

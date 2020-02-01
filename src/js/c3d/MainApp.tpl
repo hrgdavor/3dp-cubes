@@ -11,7 +11,7 @@
 <h1>{state.puzzleName} <span p='link'></span></h1>
 <div p="credits"></div>
 <h2>{'pieces'}</h2>
-(dblclick: animate angle, CTRL+click: rotate)
+(dblclick: auto rotate)
 <div p="loop" as="base/Loop" item="c3d/PieceCanvas"/>
 <h2>{'puzzles'}</h2>
 <div p="loop2" as="base/Loop" item="c3d/PieceCanvas"/>
