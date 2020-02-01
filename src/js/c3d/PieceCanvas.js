@@ -17,11 +17,10 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 			this.__lastDown = now;
 
-			if(evt.ctrlKey) this.setValue(this.cubeView.rotatePiece(this.piece));
+			if(evt.ctrlKey) this.setValue(this.cubeView.rotatePieceL(this.piece));
 			
 			var x = evt.offsetX;
 			var y = evt.offsetY;
-			console.log('evt',x,y,evt);
 		});
 
 		this.listen(this.canvas.el, 'mousemove', function(evt){
@@ -33,7 +32,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.startAnim = function(){
 		this.__animStart = Date.now();
-		this.__animStartOffset = this.cubeView.cubeDraw.offset;
+		this.__animStartAngle = this.cubeView.cfg.angle;
 		cancelAnimationFrame(this.__anim);
 		this.__anim = this.requestAnimationFrame(this.animateOffset);
 	};
@@ -41,32 +40,34 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	proto.animateOffset = function(){
 		var delta = Date.now() - this.__animStart;
 		
-		var oldOffset = this.cubeView.cubeDraw.offset;
-		var newOffset = this.__animStartOffset + Math.round(this.animDirection * delta/50);
-		if(Math.abs(newOffset) > this.maxOffset){
+		var oldAngle = this.cubeView.cfg.angle
+		var delta = Math.round(this.animDirection * delta/20);
+		var newAngle = this.__animStartAngle + delta;
+		if(Math.abs(delta) > 360){
 			cancelAnimationFrame(this.__anim);
 			return;
 		}
 
-		if(oldOffset != newOffset){
-			this.cubeView.cubeDraw.offset = newOffset;
-			this.setValue(this.piece);
+		if(oldAngle != newAngle){
+			this.cubeView.setAngle(newAngle);
+			this.cubeView.drawAll();
 		}
+
 		this.__anim = this.requestAnimationFrame(this.animateOffset);
 	};
 
 	proto.setConfig = function(cfg){
 		var c = this.canvas.el;
 
-		cfg = this.cfg = mi2.copy(cfg);
+		cfg = this.cfg = {...cfg, sizeForRotate:1}
 
 		if(this.fixAA){
 			c.style.zoom = ''+(1/this.fixAA);
-			cfg.gridW *= this.fixAA;
+			cfg.rx *= this.fixAA;
 		}
 		var cubeView = this.cubeView = new CubeView3D(c, cfg);
 		this.maxOffset = this.cubeView.cubeDraw.offset;
-		//this.cubeView.cubeDraw.offset = cfg.gridW;
+		//this.cubeView.cubeDraw.offset = cfg.rx;
 		if(this.fixAA){
 			cubeView.cubeDraw.lineWidth = this.fixAA;
 		}

@@ -5,17 +5,17 @@ mi2JS.addCompClass('c3d/MainApp', 'Base', '',
 function(proto, superProto, comp, mi2, h, t, filters){
 
 //	proto.initChildren = function(){
-//		superProto.initChildren.call(this);
-//	};
+//		superProto.initChildren.call(this)
+//	}
 	
-	var defs = {};
+	var defs = {}
 	defs.cube1 = {
 		name:'cube 1',
 		pieces: '21.01--111.100--011.110--12.10--12.01--111.010--11.01',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
-	};
+	}
 
 	defs.flat_out = {
 		name: 'Flat Out',
@@ -26,7 +26,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
-	};
+	}
 
 	defs.coffinsq = {
 		name: 'Coffin\'s Quintet',
@@ -37,7 +37,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
-	};
+	}
 
 	defs.knossos = {
 		name: 'knossos',
@@ -48,7 +48,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
-	};
+	}
 
 	defs.cubismerhan = {
 		link:'https://diypuzzles.wordpress.com/2013/04/22/cubismerhan/',
@@ -69,55 +69,53 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			'2244.2224.2224.2224.2224.2244'
 			],
 		puzzlesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 }
-	};
+	}
 
 	proto.init = function(){
-		this.showPuzzle('cubismerhan');
+		this.showPuzzle('cubismerhan')
 	}
 
 	proto.showPuzzle = function(code){
 		
 
-		var puzzleDef  = defs[code];
-		var size = 8;
+		var puzzleDef  = defs[code]
+		var size = 16
 
-		this.expandVars({puzzleName: puzzleDef.name || code});
+		this.expandVars({puzzleName: puzzleDef.name || code})
 
-		this.link.setHtml(puzzleDef.link ? '<a target="_blank" href="'+puzzleDef.link+'">(link)</a>':'');
-		var str = '';
-		if(puzzleDef.designer) str += 'Designer: <a target="_blank" href="'+puzzleDef.designerLink+'">'+puzzleDef.designer+'</a>. ';
-		this.credits.setHtml(str);
+		this.link.setHtml(puzzleDef.link ? '<a target="_blank" href="'+puzzleDef.link+'">(link)</a>':'')
+		var str = ''
+		if(puzzleDef.designer) str += 'Designer: <a target="_blank" href="'+puzzleDef.designerLink+'">'+puzzleDef.designer+'</a>. '
+		this.credits.setHtml(str)
 
-		this.piecesCfg = mi2.copy(puzzleDef.piecesCfg);
-		this.piecesCfg.gridW = size;
+		this.piecesCfg = {...puzzleDef.piecesCfg, rx:size}
 		
-		this.puzzlesCfg = mi2.copy(puzzleDef.puzzlesCfg);
-		this.puzzlesCfg.gridW = size;
+		this.puzzlesCfg = {...puzzleDef.puzzlesCfg, rx:size}
 		
-		var pieces = splitPieces(puzzleDef.pieces);
-		this.loop.setValue(pieces);
+		var pieces = splitPieces(puzzleDef.pieces)
+		this.loop.setValue(pieces)
 
-		var puzzles = splitPieces(puzzleDef.puzzles);
-		this.loop2.setValue(puzzles);
+		var puzzles = splitPieces(puzzleDef.puzzles)
+		this.loop2.setValue(puzzles)
 	}
 
 	function splitPieces(def){
 		if(typeof def == 'string')
-			return def.split('--');
-		return def;
+			return def.split('--')
+		return def
 	}
 
 	proto.on_itemCreated = function(evt){
-		evt.item.fixAA = 2;
+		evt.item.fixAA = 2
 
 		if(evt.src == this.loop)
-			evt.item.setConfig(this.piecesCfg);
+			evt.item.setConfig(this.piecesCfg)
 		else
-			evt.item.setConfig(this.puzzlesCfg);
-	};
+			evt.item.setConfig(this.puzzlesCfg)
+	}
 	
 	proto.initTemplate = function(h,t,state, self){
 		return <template/>
 	}
 
-});
+})

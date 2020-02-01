@@ -5,6 +5,7 @@
     "babel-plugin-jsx-mi2": "^1.9.0",
     "babel-plugin-jsx-translate": "^1.0.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-preset-env": "^1.6.1",
     "bourbon": "^6.0.0",
     "concat-with-sourcemaps": "^1.1.0",

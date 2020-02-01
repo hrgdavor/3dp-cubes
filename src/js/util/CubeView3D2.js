@@ -26,7 +26,7 @@
   var regionSort = [
     function(a, b){
       var ret = a.x - b.x
-      if(ret == 0) ret = a.y - b.y
+      if(ret == 0) ret = b.y - a.y
       return (ret != 0 ? ret : a.z - b.z)
     },
     function(a, b) {
@@ -35,13 +35,13 @@
       return (ret != 0 ? ret : a.z - b.z)
     }, 
     function(a, b) {
-      var ret = a.x - b.x
+      var ret = b.x - a.x
       if (ret == 0) ret = a.y - b.y
       return (ret != 0 ? ret : a.z - b.z)
     },
     function(a, b) {
-      var ret = a.x - b.x
-      if (ret == 0) ret = a.y - b.y
+      var ret = b.x - a.x
+      if (ret == 0) ret = b.y - a.y
       return (ret != 0 ? ret : a.z - b.z)
     }
   ]
@@ -286,7 +286,7 @@ proto.setAngle = function(angle, rx){
 	        if (isCubeAt(piece, x, y, z)) {
 	          var pos = this.toPx(x,y,z)
 	          
-	          cubes.push({x, y, z, pos, isTop: isCubeAt(piece, x, y, z + 1), index:cubes.length})
+	          cubes.push({x, y, z, pos, isTop: !isCubeAt(piece, x, y, z + 1), index:cubes.length})
 	        }
 	      }
 	    }
