@@ -41,6 +41,7 @@
   
 	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
 	  var cfg = this.cfg
+	  console.log('setgridsize', wx, wy)
 	  
 	  cfg.wx = wx
 	  cfg.wy = wy
@@ -68,12 +69,12 @@
 		var wy = cfg.wy
 		var wz = cfg.wz
 		var wmax = Math.max(wx, wy)
-		
+		console.log(wx,wy)
 		
 		if(cfg.sizeForRotate){
-			wx = wy = wmax
-			var gridH = wx * rx
-			ret.h = wz * rx + gridH 
+			//wx = wy = wmax
+			var gridH = (wx + wy) * rx / 2
+			ret.h = wz * rx + gridH
 			ret.w = wx * rx * 2
 			ret.cx = ret.w / 2
 		  ret.cy = wz * rx + gridH / 2

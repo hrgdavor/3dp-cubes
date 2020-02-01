@@ -4,18 +4,15 @@ function init(){
   
   var test = {a:1,b:3}
   
-  var canvas = document.getElementById('canvas')
   var canvas2 = document.getElementById('canvas2')
-  var cubeView = new CubeView3D(canvas, {gridW: 10});
-  
   canvas2.style.touchAction = 'none'
-  cubeView.cubeDraw.offset=0
-  var piece = cubeView.pieceToArray('022220.333333.333333.022220')
-  cubeView.drawPiece(piece, 1,1)
   
-  
-  var i=210
   var cView2 = new CubeView3D2(canvas2, {angle:i, rx: 20, wx:6,wy:6, sizeForRotate:1})
+  
+  var piece = cView2.pieceToArray('022220.333333.333333.022220')
+  
+  var i=45
+  
   
   function animateAngle(){
     cView2.setAngle(i)
