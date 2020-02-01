@@ -7,24 +7,46 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
 		
+		var pdown;
+		var startX, startY, startAngle, oldCube;
+		
+		this.listen(this.canvas.el, 'pointerup', function(evt){
+			pdown = false
+		});
+
 		this.listen(this.canvas.el, 'pointerdown', function(evt){
 			var now = Date.now();
 
-			if(!evt.ctrlKey && now - this.__lastDown < 500){
+			if(!evt.ctrlKey && now - this.__lastDown < 300){
+				
 				this.animDirection *= -1;
 				this.startAnim();
+
+			}else if(evt.ctrlKey){
+
+				this.setValue(this.cubeView.rotatePieceL(this.piece));
+
+			}else{
+
+				cancelAnimationFrame(this.__anim)
+
+				pdown = true
+				startAngle = this.cubeView.cfg.angle
+				startX = evt.offsetX
+				startY = evt.offsetY
+
 			}
 
 			this.__lastDown = now;
-
-			if(evt.ctrlKey) this.setValue(this.cubeView.rotatePieceL(this.piece));
-			
-			var x = evt.offsetX;
-			var y = evt.offsetY;
 		});
 
-		this.listen(this.canvas.el, 'mousemove', function(evt){
-			
+
+		this.listen(this.canvas.el, 'pointermove', function(evt){
+			if(pdown){
+				var newAngle = startAngle - (evt.offsetX - startX)
+				this.cubeView.setAngle(newAngle);
+				this.cubeView.drawAll();
+			} 
 		});
 
 		this.animDirection = 1;
