@@ -23,10 +23,36 @@
 
 	var proto = CubeView3D2.prototype;
   
+  var regionSort = [
+    function(a, b){
+      var ret = a.x - b.x
+      if(ret == 0) ret = a.y - b.y
+      return (ret != 0 ? ret : a.z - b.z)
+    },
+    function(a, b) {
+      var ret = a.x - b.x
+      if (ret == 0) ret = a.y - b.y
+      return (ret != 0 ? ret : a.z - b.z)
+    }, 
+    function(a, b) {
+      var ret = a.x - b.x
+      if (ret == 0) ret = a.y - b.y
+      return (ret != 0 ? ret : a.z - b.z)
+    },
+    function(a, b) {
+      var ret = a.x - b.x
+      if (ret == 0) ret = a.y - b.y
+      return (ret != 0 ? ret : a.z - b.z)
+    }
+  ]
+   
 proto.setAngle = function(angle, rx){
     angle = angle % 360
     if(angle < 0) angle += 360
     this.cfg.angle = angle
+
+    var oldRegion = this.region
+    var region = this.region = Math.floor(angle / 90)
     
     if(rx === void 0) rx = this.cfg.rx
     this.cfg.rx = rx
@@ -37,6 +63,15 @@ proto.setAngle = function(angle, rx){
       this.cubeDraw.angle(angle, rx)
     }
     this.bounds = this.getBounds()
+    var cubes = this.cubes
+    if(cubes){
+      cubes.forEach(cube=>{
+        cube.pos = this.toPx(cube.x,cube.y,cube.z)
+      })
+      if(oldRegion != region){
+        cubes.sort(regionSort[region])
+      }
+    }
 }
   
 	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
@@ -248,18 +283,19 @@ proto.setAngle = function(angle, rx){
 
 	      for (var z = 0; z < cfg.wz; z++) {
 
-	        if (piece[x] && piece[x][y] && piece[x][y][z]) {
+	        if (isCubeAt(piece, x, y, z)) {
 	          var pos = this.toPx(x,y,z)
-	          this.cubeDraw
-	            .move(pos)
-	            .draw();
-	            cubes.push({x, y, z, pos})
+	          
+	          cubes.push({x, y, z, pos, isTop: isCubeAt(piece, x, y, z + 1), index:cubes.length})
 	        }
 	      }
 	    }
 	  }
-	  //this.cubes = cubes.reverrse()
-
+    this.drawCubesFrom(0)
+	}
+	
+	function isCubeAt(piece, x, y, z){
+	  return piece[x] && piece[x][y] && piece[x][y][z]
 	}
 	
 	proto.findCube = function(px, py){
@@ -267,8 +303,8 @@ proto.setAngle = function(angle, rx){
 	  var rx2 = rx*rx
 	  for(var i=this.cubes.length-1; i>=0; i--){
 	    var cube = this.cubes[i]
-	    var dx = cube.pos.x - px
-	    var dy = cube.pos.y - py
+	    var dx = cube.pos.x - px 
+	    var dy = cube.pos.y - py - rx/2
 	    
 	    if(dx*dx + dy*dy < rx2) {
 	      cube.index = i
@@ -277,13 +313,13 @@ proto.setAngle = function(angle, rx){
 	  }
 	}
 	
-	proto.drawCube = function(cube, stroke){
-	  this.cubeDraw.draw(cube.pos,void 0,stroke)
+	proto.drawCube = function(cube){
+	  this.cubeDraw.draw(cube.pos, cube.fill, cube.stroke)
 	}
 	
-	proto.drawCubeRest = function(index){
-	  for(var i=index+1; i<this.cubes.length; i++){
-	    this.cubeDraw.draw(this.cubes[i].pos)
+	proto.drawCubesFrom= function(index){
+	  for(var i=index; i<this.cubes.length; i++){
+	    this.drawCube(this.cubes[i])
 	  }
 	}
 

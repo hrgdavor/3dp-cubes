@@ -7,27 +7,33 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cfg = {angle:i, rx: 40, wx:3,wy:3, sizeForRotate:1, symetricBottom:0}
+  var cfg = {angle:i, rx: 30, wx:3,wy:3, sizeForRotate:1, symetricBottom:0}
   var cView2 = new CubeView3D2(canvas2, cfg)
   
-  var piece = cView2.pieceToArray('300003.000000.300013')
+  var piece = cView2.pieceToArray('311003.000000.311013')
   // var piece = cView2.pieceToArray('022223.333333.333333.022223')
   piece = cView2.rotatePieceL(piece);
   
-  var i=30
+  var i=0
   var first = 1;
 
   function animateAngle(){
     cView2.setAngle(i)
-    cView2.drawPiece(piece, first || !cfg.sizeForRotate)
+    if(first){
+      cView2.drawPiece(piece, 1)
+    }else{
+      cView2.clear()
+      cView2.drawGrid()
+      cView2.drawCubesFrom(0)
+    }
     i += 2
     first = 0
     
-    // setTimeout(animateAngle, 30) 
+    setTimeout(animateAngle, 130) 
   }
   
   var pdown;
-  var startX, startY, startAngle;
+  var startX, startY, startAngle, oldCube;
   mi2JS.listen(canvas2, 'pointerup', function(evt){
     pdown = false
   });
@@ -39,11 +45,16 @@ function init(){
     
     var cube = cView2.findCube(startX, startY)
     
-    if(cube && 0){
+    if(cube){
       pdown = false
-      cView2.drawCubeRest(-1)
-      cView2.drawCube(cube, 'red')
-      cView2.drawCubeRest(cube.index)
+      var index = cube.index
+      if(oldCube){
+        delete oldCube.stroke
+        index = Math.min(index,oldCube.index)
+      }
+      cube.stroke = 'red'
+      cView2.drawCubesFrom(index)
+      oldCube = cube
     }
 
   });
