@@ -6,6 +6,7 @@
 	<button class="bt1" x-click={this.showPuzzle('cubismerhan')}>cubismerhan</button>
 	<button class="bt1" x-click={this.showPuzzle('coffinsq')}>Coffin's Quintet</button>
 	<button class="bt1" x-click={this.showPuzzle('flat_out')}>Flat Out</button>
+	<button class="bt1" x-click={this.showPuzzle('inchard')}>Incredibly hard</button>
 </div>
 
 <h1>{state.puzzleName} <span p='link'></span></h1>

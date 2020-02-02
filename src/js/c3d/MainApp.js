@@ -16,6 +16,14 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
 	}
+	defs.inchard = {
+		name:'Incredibly hard',
+		pieces: '1.2.11--1.1.12--02.12.1-01--1.1.11--1.12--1.12',
+		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
+		puzzles: '333.333.333',
+		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
+	}
+
 
 	defs.flat_out = {
 		name: 'Flat Out',
