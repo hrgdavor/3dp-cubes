@@ -65,7 +65,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link:'https://diypuzzles.wordpress.com/2013/04/22/cubismerhan/',
 		designer: 'Erhan Cubukcuoglu',
 		designerLink: 'https://diypuzzles.wordpress.com/about/',
-		pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
+		pieces: 'A211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
 		// pieces: '011--010.020--010.000.300',
 		piecesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 },
 		puzzles: [

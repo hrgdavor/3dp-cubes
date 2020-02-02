@@ -187,7 +187,9 @@ proto.setAngle = function(angle, rx){
 	
 	  function fill(ret, str, val) {
 	  	if(!str) return;
-	  	
+
+	    if(/[a-zA-Z]/.test(str[0])) str = str.substring(1)
+
 	    var lines = str.split('.')
 	    for (var x = 0; x < lines.length; x++) {
 	      if (!ret[x]) ret[x] = [];
