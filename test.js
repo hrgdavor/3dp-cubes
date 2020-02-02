@@ -10,11 +10,11 @@ function init(){
   var cfg = {angle:i, rx: 30, wx:3,wy:3, sizeForRotate:1, symetricBottom:0}
   var cView2 = new CubeView3D(canvas2, cfg)
   
-  var piece = cView2.pieceToArray('311003.000000.311013')
+  var piece = cView2.pieceToArray('02.12.1-01')
   // var piece = cView2.pieceToArray('022223.333333.333333.022223')
-  piece = cView2.rotatePieceL(piece);
+  //piece = cView2.rotatePieceL(piece);
   
-  var i=0
+  var i=30
   var first = 1;
 
   function animateAngle(){

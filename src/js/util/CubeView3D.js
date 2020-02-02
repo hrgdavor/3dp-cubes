@@ -183,18 +183,24 @@ proto.setAngle = function(angle, rx){
 
 	proto.pieceToArray = function(str) {
 	  var ret = [];
-	  var lines = str.split('.');
-	  for (var x = 0; x < this.wx || x < lines.length; x++) {
-	    ret[x] = [];
-	    var line = lines[x] || '';
-	    for (var y = 0; y < this.wy || y < line.length; y++) {
-	      ret[x][y] = [];
-	      var height = parseFloat(line[y] || '0')
-	      for (var z = 0; z < this.wz || z < height; z++) {
-	        ret[x][y][z] = z < height ? 1 : 0;
+	  var arr = str.split('-')
+	
+	  function fill(ret, str, val) {
+	    var lines = str.split('.')
+	    for (var x = 0; x < lines.length; x++) {
+	      if (!ret[x]) ret[x] = [];
+	      var line = lines[x] || '';
+	      for (var y = 0; y < line.length; y++) {
+	        if (!ret[x][y]) ret[x][y] = [];
+	        var height = parseFloat(line[y] || '0')
+	        for (var z = 0; z < height; z++) {
+	          ret[x][y][z] = val;
+	        }
 	      }
 	    }
 	  }
+	  fill(ret, arr[0], 1)
+	  fill(ret, arr[1], 0)
 	  return ret;
 	};
 
