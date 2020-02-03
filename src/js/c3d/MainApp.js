@@ -18,6 +18,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	}
 	defs.inchard = {
 		name:'Incredibly hard',
+		link: 'http://puzzlewillbeplayed.com/333/Impuzzables/#blue', 
+		designer: 'Gerard d\'Arcey', 
+		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Arcey.xml', 
 		pieces: '1.2.11--1.1.12--02.12.1-01--1.1.11--1.12--1.12',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
