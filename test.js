@@ -2,15 +2,23 @@
 http://localhost:7700/3dp-cubes/test.html?oauth=github
 http://3d.hrg.hr/cubes/?oauth=github
 
-https://github.com/login/oauth/access_token? client_id=e6bd1aaa69a9630cdd56&scope=gist
+https://github.com/login/oauth/access_token?client_id=e6bd1aaa69a9630cdd56&scope=gist
 
 
 */
-
-var gitOauthUrl = 'https://github.com/login/oauth/aut?client_id=e6bd1aaa69a9630cdd56&scope=gist&state='+Math.random()
+var GIST_LS_KEY = 'gist-auth-token'
+var CLIENT_ID = 'e6bd1aaa69a9630cdd56';
+var gitOauthUrl = 'https://github.com/login/oauth/authorize?client_id='+CLIENT_ID+'&scope=gist&state='+Math.random()
 
 function readOauth(){
-  
+  var qParams = parseUrl(document.location.search)
+  var headers = {Accept: 'application/json'} 
+  fetchJson('http://3d.hrg.hr/cubes/token.php?code='+qParams.code, {method:'GET', headers}).then(resp=>{
+    console.log('resp',resp);
+    if(resp.access_token){
+      localStorage.setItem(GIST_LS_KEY, resp.access_token)
+    }
+  })
 }
 
 function init(){

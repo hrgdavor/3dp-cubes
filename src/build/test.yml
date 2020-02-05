@@ -1,6 +1,6 @@
 
 - type: Proxy
-  port: 8080
+  port: 7700
   items: []
   noCache: [ "/", "/test.html" ]
   wwwRoot: "./"

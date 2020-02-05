@@ -42,3 +42,22 @@ function pointSum(p1, p2){
 function pointScale(p, scale){
   return {x: p.x * scale, y: p.y * scale} 
 }
+
+function joinUrl(params){
+  return Object.keys(params).map(p=> encodeURIComponent(p)+'='+encodeURIComponent(params[p])).join('&')
+}
+
+function parseUrl(str){
+  var ret = {}
+  if(str[0] == '?') str = str.substring(1)
+  str.split('&').forEach(item=>{
+    var [key,val] = item.split('=')
+    ret[decodeURIComponent(key)] = decodeURIComponent(val)
+  })
+
+  return ret
+}
+
+function fetchJson(url, options){
+  return fetch(url, options).then(resp=>resp.json())
+}
