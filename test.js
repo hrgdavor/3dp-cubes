@@ -1,6 +1,24 @@
+/*
+http://localhost:7700/3dp-cubes/test.html?oauth=github
+http://3d.hrg.hr/cubes/?oauth=github
 
+https://github.com/login/oauth/access_token? client_id=e6bd1aaa69a9630cdd56&scope=gist
+
+
+*/
+
+var gitOauthUrl = 'https://github.com/login/oauth/aut?client_id=e6bd1aaa69a9630cdd56&scope=gist&state='+Math.random()
+
+function readOauth(){
+  
+}
 
 function init(){
+  if(document.location.href.indexOf('oauth=github') != - 1){
+    readOauth()
+    return
+  }
+  
   
   var test = {a:1,b:3}
   
