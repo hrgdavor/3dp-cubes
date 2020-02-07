@@ -308,11 +308,28 @@ proto.setAngle = function(angle, rx){
 	    var dy = cube.pos.y - py - rx/2
 	    
 	    if(dx*dx + dy*dy < rx2) {
-	      cube.index = i
 	      return cube
 	    } 
 	  }
 	}
+	
+	proto.findGrid = function(px, py) {
+	  var rx = this.cfg.rx
+	  var rx2 = rx * rx
+	  for (var x= this.cfg.wx-1; x >=0; x--) {
+	    for (var y= this.cfg.wy-1; y >=0; y--) {
+  	    var pos = this.toPx(x,y)
+  	    var dx = pos.x - px
+  	    var dy = pos.y - py - rx / 2
+  	
+  	    if (dx * dx + dy * dy < rx2) {
+  	      return {x, y} 
+  	    }
+	    }
+	  }
+	}
+	
+	
 	
 	proto.drawCube = function(cube){
 	  this.cubeDraw.draw(cube.pos, cube.fill, cube.stroke)

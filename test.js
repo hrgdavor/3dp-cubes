@@ -33,7 +33,10 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cfg = {angle:i, rx: 30, wx:3,wy:3, sizeForRotate:1, symetricBottom:0}
+  var cfg = {angle:i, rx: 30, wx:4,wy:4,
+    sizeForRotate:1, 
+    resizeGrid: 0,
+    symetricBottom:0}
   var cView2 = new CubeView3D(canvas2, cfg)
   
   var piece = cView2.pieceToArray('02.12.1-01')
@@ -71,7 +74,7 @@ function init(){
     
     var cube = cView2.findCube(startX, startY)
     
-    if(cube  && cube.isTop){
+    if(cube){
       pdown = false
       if(oldCube){
         delete oldCube.stroke
@@ -79,6 +82,11 @@ function init(){
       cube.stroke = 'red'
       cView2.drawCubesFrom(0)
       oldCube = cube
+    }
+    var grid = cube ? 0: cView2.findGrid(startX, startY)
+    if(grid){
+      pdown = false
+      logObj(grid)
     }
 
   });
