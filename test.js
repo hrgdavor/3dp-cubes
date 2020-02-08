@@ -33,60 +33,138 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cfg = {angle:i, rx: 30, wx:4,wy:4,
+  var cfg = {angle:i, rx: 35, wx:5,wy:5,
     sizeForRotate:1, 
     resizeGrid: 0,
     symetricBottom:0}
   var cView2 = new CubeView3D(canvas2, cfg)
   
-  var piece = cView2.pieceToArray('02.12.1-01')
-  // var piece = cView2.pieceToArray('022223.333333.333333.022223')
+  var piece = cubePieceToArray('02.12.1-01')
+  console.log(cubeArrayToPiece(piece))
+  // var piece = cubePieceToArray('022223.333333.333333.022223')
   //piece = cView2.rotatePieceL(piece);
   
   var i=30
   var first = 1;
+  var gridSelected = {x:-1,y:-1,stroke:'red'}
+
+  function redrawCube(){
+     cView2.clear()
+     cView2.drawGrid([gridSelected])
+     cView2.drawCubesFrom(0)
+  }
+
+  window.minusCube = function(){
+    if(oldCube) {
+      cView2.removeCube(oldCube)
+      gridSelected.x = oldCube.x
+      gridSelected.y = oldCube.y
+      oldCube = cView2.findCube({x:oldCube.x, y:oldCube.y, z:oldCube.z-1})
+      if(oldCube) {
+        oldCube.stroke = 'red'
+        gridSelected.x = - 1
+      } 
+
+      redrawCube()
+    } 
+  }
+  
+  window.plusCube = function(){
+    var newCube = {stroke:'red'}
+    if(oldCube && (oldCube.z+1)<cView2.cfg.wz){
+      newCube.x = oldCube.x
+      newCube.y = oldCube.y
+      newCube.z = oldCube.z + 1
+    }else if(gridSelected.x != -1){
+      newCube.x = gridSelected.x
+      newCube.y = gridSelected.y
+      newCube.z = 0
+    }
+    var taken = cView2.findCube(newCube)
+    
+    while(taken){
+      newCube.z++
+      taken = cView2.findCube(newCube)
+    }
+    if(newCube.z < cView2.cfg.wz){
+      cView2.addCube(newCube)
+      if(oldCube) oldCube.stroke = null
+      gridSelected.x = -1
+      oldCube = newCube
+      redrawCube()
+    }
+  }
+  
+  window.saveCube = function(){
+    var piece = cubeListToArray(cView2.cubes)
+    var str = cubeArrayToPiece(piece)
+    console.log(str) 
+    localStorage.setItem('3d.cube.def', str)
+  }
+  
+  window.loadCube = function(){
+    var piece = cubePieceToArray(localStorage.getItem('3d.cube.def'))
+    cView2.drawPiece(piece, 1)
+    oldCube = null
+  }
+
+  window.clearCube = function(){
+    cView2.drawPiece([], 1)
+    oldCube = null
+  }
 
   function animateAngle(){
     cView2.setAngle(i)
     if(first){
       cView2.drawPiece(piece, 1)
+      first = 0
     }else{
-      cView2.clear()
-      cView2.drawGrid()
-      cView2.drawCubesFrom(0)
+      redrawCube()
     }
     i += 2
-    first = 0
+    
     
     // setTimeout(animateAngle, 130) 
   }
   
   var pdown;
   var startX, startY, startAngle, oldCube;
+  
   mi2JS.listen(canvas2, 'pointerup', function(evt){
     pdown = false
   });
+  
   mi2JS.listen(canvas2, 'pointerdown', function(evt){
     pdown = true
     startAngle = i
     startX = evt.offsetX
     startY = evt.offsetY
     
-    var cube = cView2.findCube(startX, startY)
+    var cube = cView2.findCubePx(startX, startY)
     
-    if(cube){
+    if(cube && cube != oldCube){
       pdown = false
-      if(oldCube){
-        delete oldCube.stroke
-      }
+      
       cube.stroke = 'red'
-      cView2.drawCubesFrom(0)
-      oldCube = cube
     }
+    
     var grid = cube ? 0: cView2.findGrid(startX, startY)
+    
     if(grid){
       pdown = false
-      logObj(grid)
+      gridSelected.x = grid.x
+      gridSelected.y = grid.y
+    }
+    
+    if(!pdown){
+      if (oldCube) {
+        delete oldCube.stroke
+      }
+      oldCube = cube
+      
+      if(!grid) gridSelected.x = -1
+      
+      redrawCube()
     }
 
   });

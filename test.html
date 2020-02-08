@@ -11,11 +11,24 @@
     <script src="src/js/util/CubeDraw.js"></script>
     <script src="src/js/util/CubeView3D.js"></script>
     <script src="test.js"></script>
+    <style>
+   .buttons button{
+     font-size: 1.5em;
+     min-width: 50px;
+   }
+    </style>
 </head>
 
 <body onload="init()">
-<canvas id="canvas2" width="300" height=300 style="outline:solid 1px red"></canvas>
+<canvas id="canvas2" width="350" height=400 style="outline:solid 1px red"></canvas>
+<div class="buttons">
 <button onclick="document.location=gitOauthUrl">oauth</button>
+<button onclick="saveCube() ">save</button>
+<button onclick="loadCube() ">load</button>
+<button onclick="minusCube() ">-</button>
+<button onclick="plusCube() ">+</button>
+<button onclick="clearCube() ">clear</button>
+</div>
 </body>
 
 </html>

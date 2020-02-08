@@ -14,7 +14,7 @@
     
 	  this.canvas = canvas;
 	  this.ctx = canvas.getContext("2d");
-	  this.ctx.imageSmoothingEnabled = true;
+	  //this.ctx.imageSmoothingEnabled = true;
 
 	  this.setAngle(cfg.angle, cfg.rx)
 	  this.setGridSize(cfg, resize)
@@ -69,11 +69,30 @@ proto.setAngle = function(angle, rx){
         cube.pos = this.toPx(cube.x,cube.y,cube.z)
       })
       if(oldRegion != region){
-        cubes.sort(regionSort[region])
+        this.sortCubes()
       }
     }
 }
+  proto.sortCubes = function(){
+    this.cubes.sort(regionSort[this.region])
+  }
   
+  proto.removeCube = function(fc){
+	  var cube = this.findCube(fc)
+	  if(cube) this.cubes.splice(cube.index,1)
+	  return cube
+	}
+	
+	proto.addCube = function(cube){
+	  var old = this.findCube(cube)
+	  if(!old){
+	    this.cubes.push(cube)
+	    cube.pos = this.toPx(cube.x, cube.y, cube.z)
+	    this.sortCubes()
+	  }
+	  return !old
+	}
+	
 	proto.setGridSize = function({ wx = 3, wy = 3, wz = 3 } = {}, resize) {
 	  var cfg = this.cfg
 	  
@@ -163,51 +182,6 @@ proto.setAngle = function(angle, rx){
 	   }
 	};
 
-	proto.pieceToSize = function(piece, { wx = 1, wy = 1, wz = 1 } = {}, symetricBottom) {
-
-		var newSize = { wx: Math.max(wx, piece.length), wy, wz };
-
-		piece.forEach(liney => {
-			newSize.wy = Math.max(newSize.wy, liney.length);
-			
-			liney.forEach(linez => {
-				newSize.wz = Math.max(newSize.wz, linez.length);
-			})
-		});
-		
-		if (symetricBottom) {
-			newSize.wx = newSize.wy = Math.max(newSize.wx, newSize.wy);
-		}
-		return newSize;
-	}
-
-	proto.pieceToArray = function(str) {
-	  var ret = [];
-	  var arr = str.split('-')
-	
-	  function fill(ret, str, val) {
-	  	if(!str) return;
-
-	    if(/[a-zA-Z]/.test(str[0])) str = str.substring(1)
-
-	    var lines = str.split('.')
-	    for (var x = 0; x < lines.length; x++) {
-	      if (!ret[x]) ret[x] = [];
-	      var line = lines[x] || '';
-	      for (var y = 0; y < line.length; y++) {
-	        if (!ret[x][y]) ret[x][y] = [];
-	        var height = parseFloat(line[y] || '0')
-	        for (var z = 0; z < height; z++) {
-	          ret[x][y][z] = val;
-	        }
-	      }
-	    }
-	  }
-	  fill(ret, arr[0], 1)
-	  fill(ret, arr[1], 0)
-	  return ret;
-	};
-
 	proto.clear = function(piece) {
 	  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
@@ -245,7 +219,7 @@ proto.setAngle = function(angle, rx){
   };
 
 	proto.resizeToPiece = function(piece, resizeCanvas) {
-	  var size = this.pieceToSize(piece, {}, this.cfg.symetricBottom);
+	  var size = cubePieceToSize(piece, {}, this.cfg.symetricBottom);
 	  this.setGridSize(size, resizeCanvas);
 	};
 
@@ -299,7 +273,7 @@ proto.setAngle = function(angle, rx){
 	  return piece[x] && piece[x][y] && piece[x][y][z]
 	}
 	
-	proto.findCube = function(px, py){
+	proto.findCubePx = function(px, py){
 	  var rx = this.cfg.rx
 	  var rx2 = rx*rx
 	  for(var i=this.cubes.length-1; i>=0; i--){
@@ -308,19 +282,31 @@ proto.setAngle = function(angle, rx){
 	    var dy = cube.pos.y - py - rx/2
 	    
 	    if(dx*dx + dy*dy < rx2) {
+	      cube.index = i 
 	      return cube
 	    } 
 	  }
 	}
 	
+  proto.findCube = function(fc){
+	  for(var i=this.cubes.length-1; i>=0; i--){
+	    var cube = this.cubes[i]
+	    if(cube.x == fc.x && cube.y == fc.y && cube.z == fc.z){
+	      cube.index = i
+	      return cube
+	    }
+	  } 
+	}
+	
+	
 	proto.findGrid = function(px, py) {
 	  var rx = this.cfg.rx
-	  var rx2 = rx * rx
+	  var rx2 = rx * rx * 0.5
 	  for (var x= this.cfg.wx-1; x >=0; x--) {
 	    for (var y= this.cfg.wy-1; y >=0; y--) {
   	    var pos = this.toPx(x,y)
   	    var dx = pos.x - px
-  	    var dy = pos.y - py - rx / 2
+  	    var dy = pos.y - py
   	
   	    if (dx * dx + dy * dy < rx2) {
   	      return {x, y} 
@@ -342,9 +328,8 @@ proto.setAngle = function(angle, rx){
 	}
 
 
-	proto.drawGrid = function() {
+	proto.drawGrid = function(marked=[]) {
 	  var cfg = this.cfg
-	  
 
 	  for (var x = 0; x < cfg.wx; x++) {
 
@@ -355,4 +340,11 @@ proto.setAngle = function(angle, rx){
 	        .drawTop(0, cfg.gridStroke, cfg.gridFill)
 	    }
 	  }
+	  
+	  marked.forEach(m=>{
+	    if(m.x != -1){
+	      this.cubeDraw.move(this.toPx(m.x,m.y)).drawTop(0, m.stroke)
+	    } 
+	  })
+	  
 	};
