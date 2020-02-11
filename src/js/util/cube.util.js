@@ -35,62 +35,125 @@ function cubePieceToArray(str) {
   var ret = [];
   var arr = str.split('-')
 
-  function fill(ret, str, val, zFrom = 0) {
+  function fill(ret, str) {
     if (!str) return;
 
     if (/[a-zA-Z]/.test(str[0])) str = str.substring(1)
 
     var lines = str.split('.')
     for (var x = 0; x < lines.length; x++) {
-      if (!ret[x]) ret[x] = [];
       var line = lines[x] || '';
       for (var y = 0; y < line.length; y++) {
-        if (!ret[x][y]) ret[x][y] = [];
         var height = parseFloat(line[y] || '0')
         for (var z = 0; z < height; z++) {
-          ret[x][y][z + zFrom] = val;
+          addToPieceArray(ret, x,y,z, 1);
         }
       }
     }
   }
-  fill(ret, arr[0], 1)
+
+  function addHoles(ret, str) {
+    var arr = str.split('.')
+
+    var z=parseFloat(arr[0])
+    for (var i = 1; i < arr.length; i++) {
+      var len = arr[i].length/2;
+      var x=arr[i].substring(0,len)
+      var y=arr[i].substring(len)
+      addToPieceArray(ret,x,y,z,0)
+    }
+  }
+
+  fill(ret, arr[0])
   for (var i = 1; i < arr.length; i++) {
-    fill(ret, arr[i], 0, i - 1)
+    addHoles(ret, arr[i])
   }
   return ret;
+}
+
+function addToPieceArray(arr, x,y,z,val){
+  if (!arr[x]) arr[x] = [];
+  if (!arr[x][y]) arr[x][y] = [];
+  arr[x][y][z] = val;
 }
 
 function cubeArrayToPiece(arr, trim){
   var ret = ''
   var holes = []
   var parts = []
+  var hasHoles = 0
+  var holesList = []
   
-  arr.forEach((arr_y, yi) =>{
-    
-    var part = ''
+  arr.forEach((arr_y, xi) =>{
     var maxIndex = 0
-   
-    var counts = arr_y.map((arr_z, j) =>{
+    var maxIndex2 = 0
+    var cubes = 0;
+    var max = 0
+    var counts = arr_y.map((arr_z, yi) =>{
       var height = 0
       var count = 0
       if(arr_z) arr_z.forEach((val,i)=>{
         if(val){
-          height ()= i+1
+          height = i+1
           count++
         } 
       })
-      if(height) maxIndex = j
-      return {height, count} 
-    })
-    
+
+      if(height) maxIndex = yi
+      max +=height
+      cubes += count
+      
+      if(height != count) {
+        hasHoles = true
+        maxIndex2 = yi
+        for(var zi =0; zi<arr_z.length; zi++){
+          if(!arr_z[zi]) {
+            if(!holesList[zi]) holesList[zi] = []
+            holesList[zi].push({x:xi, y:yi, z:zi})
+          }
+        }
+      }
+
+      return {height, count, cubes, max} 
+    })    
+    parts.push({maxIndex, counts, maxIndex2})
+  })
+
+  console.log('parts',parts, 'hasHoles', hasHoles, holesList);
+
+  ret = parts.map(({maxIndex,counts})=>{
+    var part = '';
     for(var i=0; i<=maxIndex; i++){
       part+= (counts[i] ?  counts[i].height : '0')
     }
-   // if(!part) part = '0'
-    parts.push(part)
-  })
+    return part    
+  }).join('.')
 
- ret = parts.join('.')
+  function letterLen(num){
+    var len = 1;
+    while(num > 9){
+      num = Math.floor(num / 10)
+      len ++;
+    }
+    return len
+  }
+
+  function padNum(num, myLen){
+    var ret = ''+num;
+    var len = letterLen(num)
+    for(var i=len; i<myLen; i++) ret = '0'+ret;
+    return ret;
+  }
+
+  holesList.forEach((list,i)=>{
+    var minus = '-'+i;
+    list.forEach(hole=>{
+      var letters = Math.max(letterLen(hole.x), letterLen(hole.y))
+      minus += '.'+padNum(hole.x, letters)+padNum(hole.y, letters)
+    })
+    console.log(i, JSON.stringify(list))
+    ret += minus;
+  });
 
   return ret
 }

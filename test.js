@@ -1,3 +1,5 @@
+/* jshint browser:true, jquery:true, esversion: 6 */
+
 /*
 http://localhost:7700/3dp-cubes/test.html?oauth=github
 http://3d.hrg.hr/cubes/?oauth=github
@@ -6,13 +8,14 @@ https://github.com/login/oauth/access_token?client_id=e6bd1aaa69a9630cdd56&scope
 
 
 */
-var GIST_LS_KEY = 'gist-auth-token'
+var GIST_LS_KEY = 'gist-auth-token';
 var CLIENT_ID = 'e6bd1aaa69a9630cdd56';
-var gitOauthUrl = 'https://github.com/login/oauth/authorize?client_id='+CLIENT_ID+'&scope=gist&state='+Math.random()
+var gitOauthUrl = 'https://github.com/login/oauth/authorize?client_id='+ 
+    CLIENT_ID + '&scope=gist&state='+Math.random();
 
 function readOauth(){
-  var qParams = parseUrl(document.location.search)
-  var headers = {Accept: 'application/json'} 
+  var qParams = parseUrl(document.location.search);
+  var headers = {Accept: 'application/json'};
   fetchJson('http://3d.hrg.hr/cubes/token.php?code='+qParams.code, {method:'GET', headers}).then(resp=>{
     console.log('resp',resp);
     if(resp.access_token){
@@ -33,13 +36,13 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cfg = {angle:i, rx: 35, wx:5,wy:5,
+  var cfg = {angle:i, rx: 35, wx:5,wy:5,wz:5,
     sizeForRotate:1, 
     resizeGrid: 0,
     symetricBottom:0}
   var cView2 = new CubeView3D(canvas2, cfg)
   
-  var piece = cubePieceToArray('02.12.1-01')
+  var piece = cubePieceToArray('033.13.1-0.01.02-1.01.02')
   console.log(cubeArrayToPiece(piece))
   // var piece = cubePieceToArray('022223.333333.333333.022223')
   //piece = cView2.rotatePieceL(piece);
