@@ -42,7 +42,7 @@ function init(){
     symetricBottom:0}
   var cView2 = new CubeView3D(canvas2, cfg)
   
-  var piece = cubePieceToArray('033.13.1-0.01.02-1.01.02')
+  var piece = cubePieceToArray('02.12.1-0.01')
   console.log(cubeArrayToPiece(piece))
   // var piece = cubePieceToArray('022223.333333.333333.022223')
   //piece = cView2.rotatePieceL(piece);
