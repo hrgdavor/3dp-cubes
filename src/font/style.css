@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'Cubes3D';
+  src:
+    url('fonts/Cubes3D.ttf?sy564') format('truetype'),
+    url('fonts/Cubes3D.woff?sy564') format('woff'),
+    url('fonts/Cubes3D.svg?sy564#Cubes3D') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Cubes3D' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-clipboard:before {
+  content: "\e900";
+}
+.icon-copy:before {
+  content: "\e901";
+}
+.icon-duplicate:before {
+  content: "\e902";
+}
+.icon-copyright:before {
+  content: "\e903";
+}
+.icon-download:before {
+  content: "\e904";
+}
+.icon-link:before {
+  content: "\e905";
+}
+.icon-menu:before {
+  content: "\e906";
+}
+.icon-minus:before {
+  content: "\e907";
+}
+.icon-pencil:before {
+  content: "\e908";
+}
+.icon-plus:before {
+  content: "\e909";
+}
+.icon-redo:before {
+  content: "\e90a";
+}
+.icon-save:before {
+  content: "\e90b";
+}
+.icon-undo:before {
+  content: "\e90c";
+}
+.icon-upload:before {
+  content: "\e90d";
+}
+.icon-user:before {
+  content: "\e90e";
+}
+.icon-x-mark:before {
+  content: "\e90f";
+}

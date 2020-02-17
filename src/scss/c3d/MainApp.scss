@@ -11,4 +11,12 @@
 		padding: 5px;
 		margin: 5px;
 	}
+	[p="loop"]{
+		display: flex;
+		align-items: stretch;
+		[as="c3d/PieceCanvas"]{
+			display: flex;
+			align-items: flex-end;
+		}
+	}
 }

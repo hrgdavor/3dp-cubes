@@ -1,4 +1,12 @@
 [as="c3d/PieceCanvas"]{
+	position: relative;
+	user-select: none;
+	> b{
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		font-weight: bold;
+	}
 	> canvas{
 		touch-action: pan-y;
 		// touch-action: none;

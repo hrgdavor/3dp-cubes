@@ -62,7 +62,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var oldAngle = this.cubeView.cfg.angle
 		var delta = Math.round(this.animDirection * delta/20);
 		var newAngle = this.__animStartAngle + delta;
-		if(Math.abs(delta) > 360){
+		if(Math.abs(delta) > 90){
 			cancelAnimationFrame(this.__anim);
 			return;
 		}
@@ -94,8 +94,13 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.setValue = function(piece){
 		var cubeView = this.cubeView;
-		if(typeof piece == 'string') piece = cubeView.pieceToArray(piece);
+		var name = '';
+		if(typeof piece == 'string'){
+		    if (/[a-zA-Z]/.test(piece[0])) name = piece[0];
+			piece = cubePieceToArray(piece);
+		} 
 		this.piece = piece;
+		this.expandVars({name});
 		// piece = cubeView.rotatePiece(piece);
 		// piece = cubeView.rotatePiece(piece);
 		// piece = cubeView.rotatePiece(piece);
@@ -104,7 +109,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.initTemplate = function(h,t,state, self){
 		return <template>
-				<canvas p="canvas" width="50" height="50"></canvas>
+			<b>{state.name}</b>
+			<canvas p="canvas" width="50" height="50"></canvas>
 		</template>
 	}
 

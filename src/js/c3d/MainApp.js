@@ -11,7 +11,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	var defs = {}
 	defs.cube1 = {
 		name:'cube 1',
-		pieces: '21.01--111.100--011.110--12.10--12.01--111.010--11.01',
+		pieces: 'A21.01--B111.100--C011.110--D12.10--E12.01--F111.010--G11.01',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -21,7 +21,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link: 'http://puzzlewillbeplayed.com/333/Impuzzables/#blue', 
 		designer: 'Gerard d\'Arcey', 
 		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Arcey.xml', 
-		pieces: '1.2.11--1.1.12--02.12.1-01--1.1.11--1.12--1.12',
+		pieces: 'A1.2.11--B1.1.12--C02.12.1-0.01--D1.1.11--E1.12--E1.12',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -33,7 +33,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link: 'http://puzzlewillbeplayed.com/333/FlatOut/',
 		designer: 'Martin H. Watson',
 		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Watson.xml',
-		pieces: '11.11.01--11.01.11--111.001.001--001.111.001--001.111.010--001.011.110--001.111.100--010.111.010--1.1',
+		pieces: 'P11.11.01--U11.01.11--V111.001.001--T001.111.001--F001.111.010--W001.011.110--Z001.111.100--X010.111.010--A10.10',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -44,7 +44,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link: 'http://puzzlewillbeplayed.com/333/CoffinsQuintet/',
 		designer: 'Stewart T. Coffin.',
 		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Coffin.xml',
-		pieces: '12.10.11--12.10.20--11.02.01--02.11.01--10.12.01',
+		pieces: 'A12.10.11--B12.10.20--C11.02.01--D02.11.01--E10.12.01',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -55,7 +55,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link: 'http://puzzlewillbeplayed.com/333/Knossos/',
 		designer: 'Bernhard Schweitzer',
 		designerLink: 'http://puzzlewillbeplayed.com/-/designer/Schweitzer.xml',
-		pieces: '211.010--210.011--021.110--12.10--21.10--111.010',
+		pieces: 'A211.010--B210.011--C021.110--D12.10--E21.10--F111.010',
 		piecesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 },
 		puzzles: '333.333.333',
 		puzzlesCfg: { wx:3, wy:3, wz:3, resizeGrid:1 }
@@ -65,11 +65,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		link:'https://diypuzzles.wordpress.com/2013/04/22/cubismerhan/',
 		designer: 'Erhan Cubukcuoglu',
 		designerLink: 'https://diypuzzles.wordpress.com/about/',
-		pieces: '211.211--211.211--121.121--121.121--221.111--221.111--122.111--122.111',
+		pieces: 'A211.211--A211.211--B121.121--B121.121--C221.111--C221.111--D122.111--D122.111',
 		// pieces: '011--010.020--010.000.300',
 		piecesCfg: { wx:1, wy:1, wz:1, resizeGrid:1 },
 		puzzles: [
-			'4444.4444.4444.4444',
+			'4444.4444.4444.4444', //AABBCCDD
 			'2222.3333.3333.3333.3333.2222',
 			'0440.4444.4444.0440.0440.0440',
 			'2222.2332.2552.2552.2332.2222',
