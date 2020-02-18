@@ -13,6 +13,7 @@
 	}
 	[p="loop"]{
 		display: flex;
+		flex-wrap: wrap;
 		align-items: stretch;
 		[as="c3d/PieceCanvas"]{
 			display: flex;
