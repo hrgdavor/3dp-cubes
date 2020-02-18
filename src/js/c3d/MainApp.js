@@ -90,7 +90,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		
 
 		var puzzleDef  = defs[code]
-		var size = 16
+		var size = 10
 
 		this.expandVars({puzzleName: puzzleDef.name || code})
 
