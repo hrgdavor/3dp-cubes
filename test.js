@@ -51,6 +51,14 @@ function init(){
   var first = 1;
   var gridSelected = {x:-1,y:-1,stroke:'red'}
 
+  function circlePos(circle){
+    if(circle) return cView2.toPx( 
+        circle.x + (circle.ox || 0), 
+        circle.y + (circle.oy || 0),
+        circle.z + (circle.oz || 0)
+      )
+  }
+
   function redrawCube(){
      var ctx = cView2.ctx;
      cView2.clear()
@@ -58,9 +66,10 @@ function init(){
      cView2.drawCubesFrom(0);
      var rx = cView2.cfg.rx;
      if(oldCube || gridSelected.x > -1){
-      var first = cView2.toPx(cubes[0].x,cubes[0].y,cubes[0].z);
-      cubes.forEach((cube,i)=>{
-        var pos = cView2.toPx(cube.x,cube.y,cube.z);
+      var first = circlePos(oldCube) ;
+      for(var i=cubes.length-1; i>=0; i--){
+        cube = cubes[i];
+        var pos = circlePos(cube);
         drawCircle(pos, rx/2);
         if(i>0){
           ctx.moveTo(first.x,first.y-rx/2);
@@ -70,7 +79,7 @@ function init(){
         ctx.fillStyle = '#ffffffcc';
         ctx.fill();
         ctx.stroke();
-      });
+      };
 
      }
   }
@@ -103,7 +112,7 @@ function init(){
   window.plusCube = function(cube){
     var newCube = {stroke:'red'}
     if(cube){
-        newCube = {...newCube, ...cube};
+        newCube = {...newCube, ...cube, ox:0,oz:0,oy:0};
     }else if(oldCube && (oldCube.z+1)<cView2.cfg.wz){
       newCube.x = oldCube.x
       newCube.y = oldCube.y
@@ -162,25 +171,25 @@ function init(){
   }
 
   function recalcCubes(cube){
-      cubes = [{...cube, del:1}];
+      cubes = [{...cube, del:1, oz:0}];
       let tmp;
 
-      tmp = {...cube, z:cube.z -1}
+      tmp = {...cube, z:cube.z -1, oz:-0.25}
       if(tmp.z >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
 
-      tmp = {...cube, x:cube.x -1}
+      tmp = {...cube, x:cube.x -1, ox:-0.25}
       if(tmp.x >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
       
-      tmp = {...cube, z:cube.z +1}
+      tmp = {...cube, z:cube.z +1, oz:0.25}
       if(tmp.z < cView2.cfg.wz && !cView2.findCube(tmp)) cubes.push(tmp);
 
-      tmp = {...cube, x:cube.x +1}
+      tmp = {...cube, x:cube.x +1, ox:0.25}
       if(tmp.x < cView2.cfg.wx && !cView2.findCube(tmp)) cubes.push(tmp);
 
-      tmp = {...cube, y:cube.y -1}
+      tmp = {...cube, y:cube.y -1, oy: -0.25}
       if(tmp.y >=0 && !cView2.findCube(tmp)) cubes.push(tmp);
 
-      tmp = {...cube, y:cube.y +1}
+      tmp = {...cube, y:cube.y +1, oy: 0.25}
       if(tmp.y < cView2.cfg.wy && !cView2.findCube(tmp)) cubes.push(tmp);    
 
 
@@ -204,7 +213,7 @@ function init(){
     
     if(cubes) for(var i=0; i<cubes.length; i++){
       let tmp = cubes[i];
-      let pos = cView2.toPx(tmp.x, tmp.y, tmp.z);
+      let pos = circlePos(tmp);
       let dx = pos.x - startX
       let dy = pos.y - startY - rx/2
 
