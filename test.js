@@ -32,7 +32,7 @@ function init(){
   
   
   var test = {a:1,b:3}
-  
+  var cubes = [];
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
@@ -191,7 +191,25 @@ function init(){
     startAngle = i
     startX = evt.offsetX
     startY = evt.offsetY
+
+    var rx = cView2.cfg.rx;
+    var rx2 = rx/2*rx/2
     
+    if(cubes) for(var i=0; i<cubes.length; i++){
+      var tmp = cubes[i];
+      var pos = cView2.toPx(tmp.x, tmp.y, tmp.z);
+      var dx = pos.x - startX 
+      var dy = pos.y - startY - rx/2
+
+      console.log('dx',dx, dy, pos, tmp);
+      if(dx*dx + dy*dy < rx2) {
+        console.log('circle',tmp);
+        plusCube(tmp);
+        pdown = false;
+        return;
+      }
+    }
+
     var cube = cView2.findCubePx(startX, startY)
     
     if(cube && cube != oldCube){
