@@ -52,9 +52,30 @@ function init(){
   var gridSelected = {x:-1,y:-1,stroke:'red'}
 
   function redrawCube(){
+     var ctx = cView2.ctx;
      cView2.clear()
      cView2.drawGrid([gridSelected])
-     cView2.drawCubesFrom(0)
+     cView2.drawCubesFrom(0);
+     if(oldCube || gridSelected.x > -1){
+      cubes.forEach(cube=>{
+        console.log('draw',cube);
+        drawCircle(cube);
+        ctx.strokeStyle = cube.del ? 'red':'green';
+        ctx.fillStyle = '#ffffffcc';
+        ctx.fill();
+        ctx.stroke();
+      });
+
+     }
+  }
+
+  function drawCircle(cube){
+      var pos = cView2.toPx(cube.x,cube.y,cube.z);
+      var ctx = cView2.ctx;
+      var rx = cView2.cfg.rx;
+      var radius = rx/2;
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y - radius, radius, 0, Math.PI *2)
   }
 
   window.minusCube = function(){
@@ -66,15 +87,20 @@ function init(){
       if(oldCube) {
         oldCube.stroke = 'red'
         gridSelected.x = - 1
-      } 
+        recalcCubes(oldCube);
+      }else{
+        cubes = [{...gridSelected, z:0}] 
+      }
 
       redrawCube()
     } 
   }
   
-  window.plusCube = function(){
+  window.plusCube = function(cube){
     var newCube = {stroke:'red'}
-    if(oldCube && (oldCube.z+1)<cView2.cfg.wz){
+    if(cube){
+        newCube = {...newCube, ...cube};
+    }else if(oldCube && (oldCube.z+1)<cView2.cfg.wz){
       newCube.x = oldCube.x
       newCube.y = oldCube.y
       newCube.z = oldCube.z + 1
@@ -94,6 +120,7 @@ function init(){
       if(oldCube) oldCube.stroke = null
       gridSelected.x = -1
       oldCube = newCube
+      recalcCubes(oldCube);
       redrawCube()
     }
   }
@@ -129,6 +156,21 @@ function init(){
     
     // setTimeout(animateAngle, 130) 
   }
+
+  function recalcCubes(cube){
+      cubes = [{...cube, del:1}];
+      var tmp = {...cube, x:cube.x -1}
+      if(tmp.x >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
+      
+      tmp = {...cube, x:cube.x +1}
+      if(tmp.x < cView2.cfg.wx && !cView2.findCube(tmp)) cubes.push(tmp);
+
+      tmp = {...cube, y:cube.y -1}
+      if(tmp.y >=0 && !cView2.findCube(tmp)) cubes.push(tmp);
+
+      tmp = {...cube, y:cube.y +1}
+      if(tmp.y < cView2.cfg.wy && !cView2.findCube(tmp)) cubes.push(tmp);    
+  }
   
   var pdown;
   var startX, startY, startAngle, oldCube;
@@ -163,7 +205,15 @@ function init(){
       if (oldCube) {
         delete oldCube.stroke
       }
+      if(cube){
+        recalcCubes(cube);
+      }else{
+        cubes = [{...gridSelected, z:0}]
+      }
       oldCube = cube
+
+
+      console.log('cubes',cubes);
       
       if(!grid) gridSelected.x = -1
       
