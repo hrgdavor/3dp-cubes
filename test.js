@@ -164,9 +164,9 @@ function init(){
     }else{
       redrawCube()
     }
-    curAngle += 2
     
     
+    // curAngle += 2
     // setTimeout(animateAngle, 130) 
   }
 
@@ -283,7 +283,7 @@ function init(){
       oldCube = cube
 
       if(!grid) gridSelected.x = -1
-      if(grid) pdown = true;
+      if(grid || cube) pdown = true;
       
       redrawCube()
     }
