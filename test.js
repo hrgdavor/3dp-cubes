@@ -197,16 +197,46 @@ function init(){
   
   var pdown;
   var startX, startY, startAngle, oldCube;
-  
+  var contextMenuOk = 1;
+
+  mi2JS.listen(canvas2, 'contextmenu', function(evt){
+    if(!contextMenuOk){
+        evt.preventDefault();
+        evt.stopPropagation();
+        return false;      
+    }
+  });
+
   mi2JS.listen(canvas2, 'pointerup', function(evt){
     pdown = false
   });
   
   mi2JS.listen(canvas2, 'pointerdown', function(evt){
+
     pdown = true
+    contextMenuOk = 1;
+
     startAngle = curAngle
     startX = evt.offsetX
     startY = evt.offsetY
+
+    var cube = cView2.findCubePx(startX, startY)
+    var grid = cube ? 0: cView2.findGrid(startX, startY)
+
+    if(evt.button == 2){
+      if(oldCube){
+        delete oldCube.stroke;
+        oldCube = null;
+      }
+      gridSelected.x = -1;
+      cubes = [];
+      redrawCube();
+      if(cube || grid) 
+        contextMenuOk = 0;
+      return false;
+    }
+
+    
 
     var rx = cView2.cfg.rx;
     var rx2 = rx/2*rx/2
@@ -227,15 +257,13 @@ function init(){
       }
     }
 
-    var cube = cView2.findCubePx(startX, startY)
-    
+
     if(cube && cube != oldCube){
       pdown = false
       
       cube.stroke = 'red'
     }
     
-    var grid = cube ? 0: cView2.findGrid(startX, startY)
     
     if(grid){
       pdown = false
@@ -255,6 +283,7 @@ function init(){
       oldCube = cube
 
       if(!grid) gridSelected.x = -1
+      if(grid) pdown = true;
       
       redrawCube()
     }
@@ -264,6 +293,7 @@ function init(){
   mi2JS.listen(canvas2, 'pointermove', function(evt){
     
     if(pdown){
+      contextMenuOk = 0;
       curAngle = startAngle - (evt.offsetX - startX)
       animateAngle()
     } 
