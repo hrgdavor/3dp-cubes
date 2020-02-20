@@ -56,10 +56,16 @@ function init(){
      cView2.clear()
      cView2.drawGrid([gridSelected])
      cView2.drawCubesFrom(0);
+     var rx = cView2.cfg.rx;
      if(oldCube || gridSelected.x > -1){
-      cubes.forEach(cube=>{
-        console.log('draw',cube);
-        drawCircle(cube);
+      var first = cView2.toPx(cubes[0].x,cubes[0].y,cubes[0].z);
+      cubes.forEach((cube,i)=>{
+        var pos = cView2.toPx(cube.x,cube.y,cube.z);
+        drawCircle(pos, rx/2);
+        if(i>0){
+          ctx.moveTo(first.x,first.y-rx/2);
+          ctx.lineTo(pos.x,pos.y-rx/2);
+        }
         ctx.strokeStyle = cube.del ? 'red':'green';
         ctx.fillStyle = '#ffffffcc';
         ctx.fill();
@@ -69,11 +75,8 @@ function init(){
      }
   }
 
-  function drawCircle(cube){
-      var pos = cView2.toPx(cube.x,cube.y,cube.z);
+  function drawCircle(pos, radius){
       var ctx = cView2.ctx;
-      var rx = cView2.cfg.rx;
-      var radius = rx/2;
       ctx.beginPath();
       ctx.arc(pos.x, pos.y - radius, radius, 0, Math.PI *2)
   }
@@ -162,6 +165,9 @@ function init(){
       var tmp = {...cube, x:cube.x -1}
       if(tmp.x >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
       
+      tmp = {...cube, z:cube.z +1}
+      if(tmp.y < cView2.cfg.wz && !cView2.findCube(tmp)) cubes.push(tmp);
+
       tmp = {...cube, x:cube.x +1}
       if(tmp.x < cView2.cfg.wx && !cView2.findCube(tmp)) cubes.push(tmp);
 
@@ -170,6 +176,7 @@ function init(){
 
       tmp = {...cube, y:cube.y +1}
       if(tmp.y < cView2.cfg.wy && !cView2.findCube(tmp)) cubes.push(tmp);    
+
   }
   
   var pdown;
