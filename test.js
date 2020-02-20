@@ -163,11 +163,16 @@ function init(){
 
   function recalcCubes(cube){
       cubes = [{...cube, del:1}];
-      var tmp = {...cube, x:cube.x -1}
+      let tmp;
+
+      tmp = {...cube, z:cube.z -1}
+      if(tmp.z >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
+
+      tmp = {...cube, x:cube.x -1}
       if(tmp.x >= 0 && !cView2.findCube(tmp)) cubes.push(tmp);
       
       tmp = {...cube, z:cube.z +1}
-      if(tmp.y < cView2.cfg.wz && !cView2.findCube(tmp)) cubes.push(tmp);
+      if(tmp.z < cView2.cfg.wz && !cView2.findCube(tmp)) cubes.push(tmp);
 
       tmp = {...cube, x:cube.x +1}
       if(tmp.x < cView2.cfg.wx && !cView2.findCube(tmp)) cubes.push(tmp);
@@ -177,6 +182,7 @@ function init(){
 
       tmp = {...cube, y:cube.y +1}
       if(tmp.y < cView2.cfg.wy && !cView2.findCube(tmp)) cubes.push(tmp);    
+
 
   }
   
@@ -202,9 +208,7 @@ function init(){
       let dx = pos.x - startX
       let dy = pos.y - startY - rx/2
 
-      console.log('dx',dx, dy, pos, tmp, startX, startY);
       if(dx*dx + dy*dy < rx2) {
-        console.log('circle',tmp);
         if(tmp.del)
           minusCube(tmp);
         else
@@ -241,9 +245,6 @@ function init(){
       }
       oldCube = cube
 
-
-      console.log('cubes',cubes);
-      
       if(!grid) gridSelected.x = -1
       
       redrawCube()
