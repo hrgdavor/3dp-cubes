@@ -36,7 +36,7 @@ function init(){
   var canvas2 = document.getElementById('canvas2')
   canvas2.style.touchAction = 'none'
   
-  var cfg = {angle:i, rx: 35, wx:5,wy:5,wz:5,
+  var cfg = {angle:curAngle, rx: 35, wx:5,wy:5,wz:5,
     sizeForRotate:1, 
     resizeGrid: 0,
     symetricBottom:0}
@@ -47,7 +47,7 @@ function init(){
   // var piece = cubePieceToArray('022223.333333.333333.022223')
   //piece = cView2.rotatePieceL(piece);
   
-  var i=30
+  var curAngle=30
   var first = 1;
   var gridSelected = {x:-1,y:-1,stroke:'red'}
 
@@ -81,12 +81,13 @@ function init(){
       ctx.arc(pos.x, pos.y - radius, radius, 0, Math.PI *2)
   }
 
-  window.minusCube = function(){
-    if(oldCube) {
-      cView2.removeCube(oldCube)
-      gridSelected.x = oldCube.x
-      gridSelected.y = oldCube.y
-      oldCube = cView2.findCube({x:oldCube.x, y:oldCube.y, z:oldCube.z-1})
+  window.minusCube = function(cube){
+    if(!cube) cube = oldCube;
+    if(cube) {
+      cView2.removeCube(cube)
+      gridSelected.x = cube.x
+      gridSelected.y = cube.y
+      oldCube = cView2.findCube({x:cube.x, y:cube.y, z:cube.z-1})
       if(oldCube) {
         oldCube.stroke = 'red'
         gridSelected.x = - 1
@@ -147,14 +148,14 @@ function init(){
   }
 
   function animateAngle(){
-    cView2.setAngle(i)
+    cView2.setAngle(curAngle)
     if(first){
       cView2.drawPiece(piece, 1)
       first = 0
     }else{
       redrawCube()
     }
-    i += 2
+    curAngle += 2
     
     
     // setTimeout(animateAngle, 130) 
@@ -188,7 +189,7 @@ function init(){
   
   mi2JS.listen(canvas2, 'pointerdown', function(evt){
     pdown = true
-    startAngle = i
+    startAngle = curAngle
     startX = evt.offsetX
     startY = evt.offsetY
 
@@ -196,15 +197,18 @@ function init(){
     var rx2 = rx/2*rx/2
     
     if(cubes) for(var i=0; i<cubes.length; i++){
-      var tmp = cubes[i];
-      var pos = cView2.toPx(tmp.x, tmp.y, tmp.z);
-      var dx = pos.x - startX 
-      var dy = pos.y - startY - rx/2
+      let tmp = cubes[i];
+      let pos = cView2.toPx(tmp.x, tmp.y, tmp.z);
+      let dx = pos.x - startX
+      let dy = pos.y - startY - rx/2
 
-      console.log('dx',dx, dy, pos, tmp);
+      console.log('dx',dx, dy, pos, tmp, startX, startY);
       if(dx*dx + dy*dy < rx2) {
         console.log('circle',tmp);
-        plusCube(tmp);
+        if(tmp.del)
+          minusCube(tmp);
+        else
+          plusCube(tmp);
         pdown = false;
         return;
       }
@@ -250,7 +254,7 @@ function init(){
   mi2JS.listen(canvas2, 'pointermove', function(evt){
     
     if(pdown){
-      i = startAngle - (evt.offsetX - startX)
+      curAngle = startAngle - (evt.offsetX - startX)
       animateAngle()
     } 
   });
