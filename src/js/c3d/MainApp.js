@@ -4,9 +4,17 @@ mi2JS.addCompClass('c3d/MainApp', 'Base', '',
 // component initializer function that defines constructor and adds methods to the prototype
 function(proto, superProto, comp, mi2, h, t, filters){
 
-//	proto.initChildren = function(){
-//		superProto.initChildren.call(this)
-//	}
+	proto.initChildren = function(){
+		superProto.initChildren.call(this)
+		// this.qrcode = new QRCode(this.qr.el, {
+		//     text: "http://3d.hrg.hr/cubes/",
+		//     width: 128,
+		//     height: 128,
+		//     colorDark : "#000000",
+		//     colorLight : "#ffffff",
+		//     correctLevel : QRCode.CorrectLevel.H
+		// });
+	}
 	
 	var defs = {}
 	defs.cube1 = {

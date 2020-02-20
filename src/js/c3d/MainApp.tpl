@@ -17,5 +17,6 @@
 <h2>{'puzzles'}</h2>
 <div p="loop2" as="base/Loop" item="c3d/PieceCanvas"/>
 
+<div p="qr"></div> 
 
 </frag>

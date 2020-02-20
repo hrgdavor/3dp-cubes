@@ -56,7 +56,8 @@ bundlesTask.add("lib",
     "js/mi2/NWGroup.js",
     "js/mi2/*.js",
     "js/mi2/Base.js",
-    "js/mi2/base/**.js"
+    "js/mi2/base/**.js",
+    "js/qrcode.js"
 ).exclude(
     "js/mi2/base/TabPane.js",
     "js/mi2/base/RenderTable.js",
