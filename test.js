@@ -29,7 +29,12 @@ function init(){
     readOauth()
     return
   }
+
+  window.processor = new OpenJsCad.Processor(document.getElementById('ojsc'),{},function(evt){
+    console.log('openjscad processor change ', evt);
+  });
   
+  processor.setRenderedObjects([{data:CSG.cube({size:3})}]);
   
   var test = {a:1,b:3}
   var cubes = [];
@@ -75,8 +80,8 @@ function init(){
           ctx.moveTo(first.x,first.y-rx/2);
           ctx.lineTo(pos.x,pos.y-rx/2);
         }
-        ctx.strokeStyle = cube.del ? 'red':'green';
-        ctx.fillStyle = '#ffffffcc';
+        ctx.strokeStyle = cube.del ? '#aa0000aa':'#00aa00aa';
+        ctx.fillStyle = '#ffffffee';
         ctx.fill();
         ctx.stroke();
       };
