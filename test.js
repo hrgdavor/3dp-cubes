@@ -30,7 +30,9 @@ function init(){
     return
   }
 
-  window.processor = new OpenJsCad.Processor(document.getElementById('ojsc'),{},function(evt){
+  window.processor = new OpenJsCad.Processor(document.getElementById('ojsc'),
+    { color: [233/255,93/255,233/255].map(x=>x*1.3), color: [1,1,1] },
+    function(evt){
     console.log('openjscad processor change ', evt);
   });
   
@@ -84,7 +86,7 @@ function init(){
         ctx.fillStyle = '#ffffffee';
         ctx.fill();
         ctx.stroke();
-      };
+      }
 
      }
   }
