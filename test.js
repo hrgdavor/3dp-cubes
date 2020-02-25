@@ -103,7 +103,12 @@ function init(){
       cView2.removeCube(cube)
       gridSelected.x = cube.x
       gridSelected.y = cube.y
-      oldCube = cView2.findCube({x:cube.x, y:cube.y, z:cube.z-1})
+      oldCube = cView2.findCube({x:cube.x, y:cube.y, z:cube.z+1})
+      if(!oldCube) oldCube = cView2.findCube({x:cube.x, y:cube.y, z:cube.z-1})
+      if(!oldCube) oldCube = cView2.findCube({x:cube.x-1, y:cube.y, z:cube.z})
+      if(!oldCube) oldCube = cView2.findCube({x:cube.x+1, y:cube.y, z:cube.z})
+      if(!oldCube) oldCube = cView2.findCube({x:cube.x, y:cube.y-1, z:cube.z})
+      if(!oldCube) oldCube = cView2.findCube({x:cube.x, y:cube.y+1, z:cube.z})
       if(oldCube) {
         oldCube.stroke = 'red'
         gridSelected.x = - 1
