@@ -10,6 +10,6 @@
     "bourbon": "^6.0.0",
     "concat-with-sourcemaps": "^1.1.0",
     "js-yaml": "^3.13.1",
-    "terser": "^4.3.0"
+    "terser": "^4.8.1"
   }
 }
